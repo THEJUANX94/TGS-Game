@@ -1,12 +1,11 @@
 package main;
 
-import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.*;
 
 import javax.swing.JPanel;
 
-public class GamePanel extends JPanel implements Runnable{
-    
+public class GamePanel extends JPanel implements Runnable {
+
     final int originalTileSize = 16;
     final int scale = 3;
     final int tileSize = originalTileSize * scale;
@@ -18,19 +17,36 @@ public class GamePanel extends JPanel implements Runnable{
 
     Thread gameThread;
 
-    public GamePanel(){
+    public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
     }
 
-    public void startGameThread(){
+    public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
     }
 
+    public void update() {
+
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D)g;
+        g2.setColor(Color.WHITE);
+        g2.fillRect(100, 100, tileSize, tileSize);
+        g2.dispose();
+    }
+
     @Override
     public void run() {
-        
+        while (gameThread != null) {
+            update();
+
+            repaint();
+        }
     }
 }
