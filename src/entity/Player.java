@@ -1,13 +1,15 @@
 package entity;
 
-import main.GamePanel;
-import main.KeyHandler;
-import java.awt.*;
-import java.awt.image.*;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+
+import main.GamePanel;
+import main.KeyHandler;
 
 public class Player extends Entity {
 
@@ -25,6 +27,12 @@ public class Player extends Entity {
 
         setDefaultValues();
         getPlayerImage();
+
+        solidArea = new Rectangle();
+        solidArea.x = 8;
+        solidArea.y = 16;
+        solidArea.width = 32;
+        solidArea.height = 32;
     }
 
     public void setDefaultValues() {
@@ -53,16 +61,33 @@ public class Player extends Entity {
         if (keys.wPressed == true || keys.sPressed == true || keys.aPressed == true || keys.dPressed == true) {
             if (keys.wPressed == true) {
                 direction = "up";
-                worldY -= speed;
             } else if (keys.sPressed == true) {
                 direction = "down";
-                worldY += speed;
             } else if (keys.aPressed == true) {
                 direction = "left";
-                worldX -= speed;
             } else if (keys.dPressed == true) {
                 direction = "right";
-                worldX += speed;
+            }
+
+            // Check tile collision 
+            collisionOn = false;
+            gp.cChecker.checkTile(this);
+
+            if(collisionOn == false ){
+                switch(direction){
+                    case"up":
+                    worldY -= speed;
+                        break;
+                    case "down":
+                    worldY += speed;
+                        break;
+                    case "left":
+                    worldX -= speed;
+                        break;
+                    case "right":
+                    worldX += speed;
+                        break;
+                }
             }
 
             spriteCounter++;
