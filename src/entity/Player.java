@@ -79,6 +79,7 @@ public class Player extends Entity {
             // chech the object collision
             int objIndex = gp.cChecker.checkObject(this, true);
             pickUpObject(objIndex);
+
             if(collisionOn == false ){
                 switch(direction){
                     case"up":
@@ -115,15 +116,23 @@ public class Player extends Entity {
 
             switch(objName){
                 case "Key":
+                    gp.playSE(1);
                     hasKey++;
                     gp.obj[i] = null;
                     break;
                 case "Door":
                     if (hasKey > 0){
+                        gp.playSE(3);
                         gp.obj[i] = null;
                         hasKey--;
                     } 
                     break;
+                case "Boots":
+                    gp.playSE(2);
+                    speed += 1;
+                    gp.obj[i] = null;
+                    break;
+            }
         }
     }
 
