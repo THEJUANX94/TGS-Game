@@ -114,7 +114,7 @@ public class Player extends Entity {
             String objName = gp.obj[i].name;
 
             switch(objName){
-                case "Key":
+                case "key":
                     hasKey++;
                     gp.obj[i] = null;
                     break;
@@ -124,6 +124,7 @@ public class Player extends Entity {
                         hasKey--;
                     } 
                     break;
+            }
         }
     }
 

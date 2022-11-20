@@ -72,12 +72,13 @@ public class CollicionChecker {
                 entity.solidArea.y = entity.worldY + entity.solidArea.y;
                 //get the object's solid area position
                 gp.obj[i].solidArea.x = gp.obj[i].worldX + gp.obj[i].solidArea.x;
-                gp.obj[i].solidArea.y = gp.obj[i].worldX + gp.obj[i].solidArea.y;
+                gp.obj[i].solidArea.y = gp.obj[i].worldY + gp.obj[i].solidArea.y;
 
                 switch(entity.direction){
                     case"up":
                     entity.solidArea.y -= entity.speed;
                         if(entity.solidArea.intersects(gp.obj[i].solidArea)){
+                            System.out.println("up collision");
                             if(gp.obj[i].collision == true){
                                 entity.collisionOn = true; 
                             }
@@ -89,6 +90,7 @@ public class CollicionChecker {
                     case "down":
                     entity.solidArea.y += entity.speed;
                         if(entity.solidArea.intersects(gp.obj[i].solidArea)){
+                            System.out.println("down collision");
                             if(gp.obj[i].collision == true){
                                 entity.collisionOn = true; 
                             }
@@ -100,6 +102,7 @@ public class CollicionChecker {
                     case "left":
                     entity.solidArea.x -= entity.speed;
                         if(entity.solidArea.intersects(gp.obj[i].solidArea)){
+                            System.out.println("left collision");
                             if(gp.obj[i].collision == true){
                                 entity.collisionOn = true; 
                             }
@@ -110,6 +113,7 @@ public class CollicionChecker {
                         break;
                     case "right":
                         if(entity.solidArea.intersects(gp.obj[i].solidArea)){
+                            System.out.println("right collision");
                             if(gp.obj[i].collision == true){
                                 entity.collisionOn = true; 
                             }
