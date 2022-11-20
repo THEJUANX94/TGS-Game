@@ -78,6 +78,7 @@ public class CollicionChecker {
                         entity.solidArea.y -= entity.speed;
                        
                         if(entity.solidArea.intersects(gp.obj[i].solidArea)){
+                            System.out.println("up collision");
                             if(gp.obj[i].collision == true){
                                 entity.collisionOn = true; 
                             }
@@ -90,6 +91,7 @@ public class CollicionChecker {
                         entity.solidArea.y += entity.speed;
                         
                         if(entity.solidArea.intersects(gp.obj[i].solidArea)){
+                            System.out.println("down collision");
                             if(gp.obj[i].collision == true){
                                 entity.collisionOn = true; 
                             }
@@ -102,6 +104,7 @@ public class CollicionChecker {
                         entity.solidArea.x -= entity.speed;
                         
                         if(entity.solidArea.intersects(gp.obj[i].solidArea)){
+                            System.out.println("left collision");
                             if(gp.obj[i].collision == true){
                                 entity.collisionOn = true; 
                             }
@@ -113,6 +116,7 @@ public class CollicionChecker {
                     case "right":
                         entity.solidArea.x += entity.speed;
                         if(entity.solidArea.intersects(gp.obj[i].solidArea)){
+                            System.out.println("right collision");
                             if(gp.obj[i].collision == true){
                                 entity.collisionOn = true; 
                             }

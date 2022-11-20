@@ -132,6 +132,7 @@ public class Player extends Entity {
                     speed += 1;
                     gp.obj[i] = null;
                     break;
+
             }
         }
     }
