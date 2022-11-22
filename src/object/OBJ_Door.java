@@ -1,5 +1,6 @@
 package object;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -10,7 +11,7 @@ public class OBJ_Door extends SuperObject{
             name = "Door";
     
             try {
-                image = ImageIO.read(getClass().getResourceAsStream("/images/object/door.png"));
+                image = ImageIO.read(new File("./src/Images/Object/door.png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
