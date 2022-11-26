@@ -1,26 +1,19 @@
 package entity;
 
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import main.GamePanel;
 import main.KeyHandler;
-import main.UtilityTool;
 
 public class Player extends Entity {
 
-    private GamePanel gp;
     private KeyHandler keys;
     public final int screenX;
     public final int screenY;
 
     public Player(GamePanel gp, KeyHandler keys) {
-        this.gp = gp;
+        super(gp);
         this.keys = keys;
 
         screenX = gp.screenWidth / 2;
@@ -28,14 +21,6 @@ public class Player extends Entity {
 
         setDefaultValues();
         getPlayerImage();
-
-        solidArea = new Rectangle();
-        solidArea.x = 8;
-        solidArea.y = 16;
-        solidAreaDefaultX = solidArea.x;
-        solidAreaDefaultY = solidArea.y;
-        solidArea.width = 32;
-        solidArea.height = 32;
     }
 
     public void setDefaultValues() {
@@ -46,27 +31,14 @@ public class Player extends Entity {
     }
 
     public void getPlayerImage() {
-        up1 = setUp("boy_up_1");
-        up2 = setUp("boy_up_2");
-        down1 = setUp("boy_down_1");
-        down2 = setUp("boy_down_2");
-        left1 = setUp("boy_left_1");
-        left2 = setUp("boy_left_2");
-        right1 = setUp("boy_right_1");
-        right2 = setUp("boy_right_2");
-    }
-
-    public BufferedImage setUp(String imageName) {
-        UtilityTool uTool = new UtilityTool();
-        BufferedImage scaledImage = null;
-
-        try {
-            scaledImage = ImageIO.read(new File("./src/Images/player/" + imageName + ".png"));
-            scaledImage = uTool.scaleImage(scaledImage, gp.tileSize, gp.tileSize);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return scaledImage;
+        up1 = setUp("player/boy_up_1");
+        up2 = setUp("player/boy_up_2");
+        down1 = setUp("player/boy_down_1");
+        down2 = setUp("player/boy_down_2");
+        left1 = setUp("player/boy_left_1");
+        left2 = setUp("player/boy_left_2");
+        right1 = setUp("player/boy_right_1");
+        right2 = setUp("player/boy_right_2");
     }
 
     public void update() {
@@ -88,6 +60,9 @@ public class Player extends Entity {
             // chech the object collision
             int objIndex = gp.cChecker.checkObject(this, true);
             pickUpObject(objIndex);
+
+            int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
+            interactNPC(npcIndex);
 
             if (collisionOn == false) {
                 switch (direction) {
@@ -119,9 +94,14 @@ public class Player extends Entity {
 
     }
 
+    private void interactNPC(int i) {
+        if (i != 999) {
+        }
+    }
+
     public void pickUpObject(int i) {
         if (i != 999) {
-            
+
         }
     }
 
