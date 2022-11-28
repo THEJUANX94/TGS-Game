@@ -1,15 +1,18 @@
 package main;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics2D;
-import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class UI {
 
     public GamePanel gp;
     public Graphics2D g2;
-    public Font arial_40, arial_80B;
+    public Font maruMonicaFont;
     public boolean messageOn = false;
     public String message = "";
     public int messageCounter = 0;
@@ -18,8 +21,14 @@ public class UI {
 
     public UI(GamePanel gp) {
         this.gp = gp;
-        arial_40 = new Font("Arial", Font.PLAIN, 40);
-        arial_80B = new Font("Arial", Font.BOLD, 80);
+        try {
+            File is = new File("./src/Images/Fonts/x12y16pxMaruMonica.ttf");
+            maruMonicaFont = Font.createFont(Font.TRUETYPE_FONT, is);
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void showMessage(String message) {
@@ -29,7 +38,7 @@ public class UI {
 
     public void draw(Graphics2D g2) {
         this.g2 = g2;
-        g2.setFont(arial_40);
+        g2.setFont(maruMonicaFont);
         g2.setColor(Color.WHITE);
 
         if (gp.gameState == gp.playState) {
