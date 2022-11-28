@@ -31,7 +31,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int worldHeight = tileSize * maxWorldRow;
 
     public TileManager tileManager = new TileManager(this);
-    private KeyHandler keys = new KeyHandler(this);
+    public KeyHandler keys = new KeyHandler(this);
     Sound music = new Sound();
     Sound se = new Sound();
     public CollicionChecker cChecker = new CollicionChecker(this);
@@ -47,6 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
     public int gameState;
     public final int playState = 1;
     public final int pauseState = 2;
+    public int dialogueState = 3;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -59,8 +60,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void setupGame() {
         aSetter.setObject();
         aSetter.setNPC();
-        // PlayMusic(0);
-        // stopMusic();
+        playMusic(0);
         gameState = playState;
     }
 
@@ -118,7 +118,7 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
     }
 
-    public void PlayMusic(int i) {
+    public void playMusic(int i) {
         music.setFile(i);
         music.play();
         music.loop();
@@ -129,8 +129,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void playSE(int i) {
-        // se.setFile(i);
-        // se.play();
+        se.setFile(i);
+        se.play();
     }
 
     @Override

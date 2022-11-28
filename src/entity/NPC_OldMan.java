@@ -12,6 +12,7 @@ public class NPC_OldMan extends Entity {
         direction = "down";
         speed = 1;
         getOldManImage();
+        setDialogue();
     }
 
     public void getOldManImage() {
@@ -44,8 +45,17 @@ public class NPC_OldMan extends Entity {
             }
             actionLockCounter = 0;
         }
-        
 
     }
 
+    public void setDialogue() {
+        dialogues[0] = "Hola!";
+        dialogues[1] = "¿Vienes a buscar el tesoro de la isla?";
+        dialogues[2] = "Fui un aventurero pero ahora estoy \ndemasiado viejo para ello";
+        dialogues[3] = "Te deseo suerte!";
+    }
+
+    public void speak() {
+       super.speak();
+    }
 }
