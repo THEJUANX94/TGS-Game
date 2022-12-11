@@ -4,15 +4,20 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.image.BufferedImage;
 import java.awt.Graphics2D;
 import java.io.File;
 import java.io.IOException;
+
+import object.OBJ_Heart;
+import object.SuperObject;
 
 public class UI {
 
     public GamePanel gp;
     public Graphics2D g2;
     public Font maruMonicaFont;
+    public BufferedImage heart_full, heart_half, heart_blank;
     public boolean messageOn = false;
     public String message = "";
     public int messageCounter = 0;
@@ -31,6 +36,11 @@ public class UI {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        SuperObject heart = new OBJ_Heart(gp);
+        heart_full = heart.image;
+        heart_half = heart.image2;
+        heart_blank = heart.image3;
     }
 
     public void showMessage(String message) {
@@ -47,13 +57,41 @@ public class UI {
             drawTitleScreen();
         }
         if (gp.gameState == gp.playState) {
-
+            drawPlayerLife();
         }
         if (gp.gameState == gp.pauseState) {
+            drawPlayerLife();
             drawPauseScreen();
         }
         if (gp.gameState == gp.dialogueState) {
+            drawPlayerLife();
             drawDialogueScreen();
+        }
+    }
+
+    public void drawPlayerLife() {
+        int x = gp.tileSize / 2;
+        int y = gp.tileSize / 2;
+        int i = 0;
+
+        while (i < gp.player.maxLife / 2) {
+            g2.drawImage(heart_blank, x, y, null);
+            i++;
+            x += gp.tileSize;
+        }
+
+        x = gp.tileSize / 2;
+        y = gp.tileSize / 2;
+        i = 0;
+
+        while (i < gp.player.life) {
+            g2.drawImage(heart_half, x, y, null);
+            i++;
+            if (i < gp.player.life) {
+                g2.drawImage(heart_full, x, y, null);
+            }
+            i++;
+            x += gp.tileSize;
         }
     }
 
@@ -101,14 +139,13 @@ public class UI {
             if (commandNum == 2) {
                 g2.drawString(">", x - gp.tileSize, y);
             }
-        }
-        else if(titleScreenState == 1){
+        } else if (titleScreenState == 1) {
             g2.setColor(Color.WHITE);
             g2.setFont(g2.getFont().deriveFont(42F));
 
             String text = "Select your class!";
             int x = geXForCenteredText(text);
-            int y = gp.tileSize*3;
+            int y = gp.tileSize * 3;
             g2.drawString(text, x, y);
 
             text = "Fighter";
@@ -116,7 +153,7 @@ public class UI {
             y += gp.tileSize;
             g2.drawString(text, x, y);
             if (commandNum == 0) {
-                g2.drawString(">", x-gp.tileSize, y);
+                g2.drawString(">", x - gp.tileSize, y);
             }
 
             text = "Mage";
@@ -124,7 +161,7 @@ public class UI {
             y += gp.tileSize;
             g2.drawString(text, x, y);
             if (commandNum == 1) {
-                g2.drawString(">", x-gp.tileSize, y);
+                g2.drawString(">", x - gp.tileSize, y);
             }
 
             text = "Assasin";
@@ -132,15 +169,15 @@ public class UI {
             y += gp.tileSize;
             g2.drawString(text, x, y);
             if (commandNum == 2) {
-                g2.drawString(">", x-gp.tileSize, y);
+                g2.drawString(">", x - gp.tileSize, y);
             }
 
             text = "Back";
             x = geXForCenteredText(text);
-            y += gp.tileSize*2;
+            y += gp.tileSize * 2;
             g2.drawString(text, x, y);
             if (commandNum == 3) {
-                g2.drawString(">", x-gp.tileSize, y);
+                g2.drawString(">", x - gp.tileSize, y);
             }
         }
 
