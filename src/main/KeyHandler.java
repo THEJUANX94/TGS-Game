@@ -157,6 +157,27 @@ public class KeyHandler implements KeyListener {
 
     }
 
+    @Override
+    public void keyReleased(KeyEvent e) {
+        int code = e.getKeyCode();
+
+        if (code == KeyEvent.VK_W) {
+            wPressed = false;
+        }
+
+        if (code == KeyEvent.VK_A) {
+            aPressed = false;
+        }
+
+        if (code == KeyEvent.VK_S) {
+            sPressed = false;
+        }
+
+        if (code == KeyEvent.VK_D) {
+            dPressed = false;
+        }
+    }
+
     public void optionsState(KeyEvent e) {
         int code = e.getKeyCode();
 
@@ -223,26 +244,4 @@ public class KeyHandler implements KeyListener {
             }
         }
     }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        int code = e.getKeyCode();
-
-        if (code == KeyEvent.VK_W) {
-            wPressed = false;
-        }
-
-        if (code == KeyEvent.VK_A) {
-            aPressed = false;
-        }
-
-        if (code == KeyEvent.VK_S) {
-            sPressed = false;
-        }
-
-        if (code == KeyEvent.VK_D) {
-            dPressed = false;
-        }
-    }
-
 }

@@ -9,11 +9,11 @@ import javax.sound.sampled.FloatControl;
 
 public class Sound {
 
-    Clip clip;
-    URL soundURL[] = new URL[30];
-    FloatControl fc;
-    int volumeScale = 3;
-    float volume;
+    public Clip clip;
+    public URL soundURL[] = new URL[30];
+    public FloatControl fc;
+    public int volumeScale = 3;
+    public float volume;
 
     public Sound() {
         soundURL[0] = getClass().getResource("/Sound/BlueBoyAdventure.wav");
