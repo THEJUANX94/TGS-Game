@@ -41,7 +41,9 @@ public class KeyHandler implements KeyListener {
                 if (code == KeyEvent.VK_ENTER) {
                     switch (gp.ui.commandNum) {
                         case 0:
-                            gp.ui.titleScreenState = 1;
+                            // gp.ui.titleScreenState = 1;
+                            gp.gameState = gp.playState;
+                            gp.playMusic(0);
                             break;
                         case 1:
 
@@ -116,12 +118,16 @@ public class KeyHandler implements KeyListener {
                 dPressed = true;
             }
 
-            if (code == KeyEvent.VK_ESCAPE || code == KeyEvent.VK_P) {
+            if (code == KeyEvent.VK_P) {
                 gp.gameState = gp.pauseState;
             }
 
             if (code == KeyEvent.VK_ENTER) {
                 enterPressed = true;
+            }
+
+            if (code == KeyEvent.VK_ESCAPE) {
+                gp.gameState = gp.optionsState;
             }
 
             if (code == KeyEvent.VK_T) {
@@ -145,6 +151,77 @@ public class KeyHandler implements KeyListener {
             }
         }
 
+        else if (gp.gameState == gp.optionsState) {
+            optionsState(e);
+        }
+
+    }
+
+    public void optionsState(KeyEvent e) {
+        int code = e.getKeyCode();
+
+        if (code == KeyEvent.VK_ESCAPE) {
+            gp.gameState = gp.playState;
+        }
+
+        if (code == KeyEvent.VK_ENTER) {
+            enterPressed = true;
+        }
+
+        int maxCommandNum = 0;
+        switch (gp.ui.substate) {
+            case 0:
+                maxCommandNum = 5;
+                break;
+
+            case 3:
+                maxCommandNum = 1;
+                break;
+
+            default:
+                break;
+        }
+
+        if (code == KeyEvent.VK_W) {
+            gp.ui.commandNum--;
+            gp.playSE(9);
+            if (gp.ui.commandNum < 0) {
+                gp.ui.commandNum = maxCommandNum;
+            }
+        }
+
+        if (code == KeyEvent.VK_S) {
+            gp.ui.commandNum++;
+            gp.playSE(9);
+            if (gp.ui.commandNum > maxCommandNum) {
+                gp.ui.commandNum = 0;
+            }
+        }
+        if (code == KeyEvent.VK_A) {
+            if (gp.ui.substate == 0) {
+                if (gp.ui.commandNum == 1 && gp.music.volumeScale > 0) {
+                    gp.music.volumeScale--;
+                    gp.music.checkVolume();
+                    gp.playSE(9);
+                }
+                if (gp.ui.commandNum == 2 && gp.se.volumeScale > 0) {
+                    gp.se.volumeScale--;
+                    gp.playSE(9);
+                }
+            }
+        }
+        if (code == KeyEvent.VK_D) {
+            if (gp.ui.substate == 0) {
+                if (gp.ui.commandNum == 1 && gp.music.volumeScale < 5) {
+                    gp.music.volumeScale++;
+                    gp.playSE(9);
+                }
+                if (gp.ui.commandNum == 2 && gp.se.volumeScale < 5) {
+                    gp.se.volumeScale++;
+                    gp.playSE(9);
+                }
+            }
+        }
     }
 
     @Override

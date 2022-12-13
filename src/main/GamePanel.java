@@ -36,6 +36,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     BufferedImage tempScreen;
     Graphics2D g2;
+    public boolean fullScreenOn = false;
 
     public TileManager tileManager = new TileManager(this);
     public KeyHandler keys = new KeyHandler(this);
@@ -44,6 +45,7 @@ public class GamePanel extends JPanel implements Runnable {
     public CollicionChecker cChecker = new CollicionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
+    Config config = new Config(this);
     Thread gameThread;
 
     // Entity and object
@@ -56,6 +58,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int playState = 1;
     public final int pauseState = 2;
     public int dialogueState = 3;
+    public final int optionsState = 5;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -82,7 +85,9 @@ public class GamePanel extends JPanel implements Runnable {
         tempScreen = new BufferedImage(screenWidth, screenHeight, BufferedImage.TYPE_INT_ARGB);
         g2 = (Graphics2D) tempScreen.getGraphics();
 
-        setFullScreen();
+        if (fullScreenOn) {
+            setFullScreen();
+        }
     }
 
     public void startGameThread() {
@@ -95,7 +100,7 @@ public class GamePanel extends JPanel implements Runnable {
             player.update();
             for (int i = 0; i < npc.length; i++) {
                 if (npc[i] != null) {
-                    npc[i].update();
+                    // npc[i].update();
                 }
             }
         }
