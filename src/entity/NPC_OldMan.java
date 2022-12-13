@@ -19,6 +19,7 @@ public class NPC_OldMan extends Entity {
         up1 = setUp("NPC/oldman_up_1");
         up2 = setUp("NPC/oldman_up_2");
         down1 = setUp("NPC/oldman_down_1");
+
         down2 = setUp("NPC/oldman_down_2");
         left1 = setUp("NPC/oldman_left_1");
         left2 = setUp("NPC/oldman_left_2");
@@ -50,9 +51,9 @@ public class NPC_OldMan extends Entity {
 
     public void setDialogue() {
         dialogues[0] = "Hola!";
-        dialogues[1] = "¿Vienes a buscar el tesoro de la isla?";
-        dialogues[2] = "Fui un aventurero pero ahora estoy demasiado\n viejo para ello";
-        dialogues[3] = "Te deseo suerte!";
+        dialogues[1] = "¿Vienes a buscar conocimiento de TGS?";
+        dialogues[2] = "Fui un profesor pero ahora estoy demasiado\n viejo para ello";
+        dialogues[3] = "Busca a mis compañeros!";
     }
 
     public void speak() {
