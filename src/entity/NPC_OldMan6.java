@@ -25,10 +25,10 @@ public class NPC_OldMan6 extends Entity {
     }
 
     public void setDialogue() {
-        dialogues[0] = "Hola!";
-        dialogues[1] = "Conozco sobre TGS";
-        dialogues[2] = "Ludwig Von Bertalanffy fue uno de los primeros en dar el termino de sistema y de intercambios entre sistemas";
-        dialogues[3] = "Tambien señalo la frase de Aristoteles \"El todo es mas que la supa de sus partes\"";
+        dialogues[0] = "Conozco sobre las diferentes taxonomias";
+        dialogues[1] = "Exiten varias, como la de Jordan, la de Beer, la de Boulding, como tambien algunas metododologias";
+        dialogues[2] = "Beer habla sobre la capacidad de autoorganizacion de un sistema";
+        dialogues[3] = "Y Boulding creo nueve niveles, donde clasifica sistmeas intuitivamente";
     }
 
     public void speak() {

@@ -22,7 +22,7 @@ public class TileManager {
         tile = new Tile[50];
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
         getTileImage();
-        loadMap("./src/Images/MapsCodes/WorldMapV2.txt");
+        loadMap("./src/Images/MapsCodes/WorldMapV3.txt");
     }
 
     public void loadMap(String pathMap) {
@@ -100,6 +100,8 @@ public class TileManager {
         setUp(39, "earth", false);
         setUp(40, "wall", true);
         setUp(41, "tree", true);
+        setUp(42, "floor01", false);
+        setUp(43, "hut", true);
 
     }
 

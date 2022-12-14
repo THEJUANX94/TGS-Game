@@ -26,6 +26,7 @@ public class UI {
     public int commandNum = 0;
     public int titleScreenState = 0;
     int substate = 0;
+    public int correctAnswers = 0;
 
     public UI(GamePanel gp) {
         this.gp = gp;
@@ -75,6 +76,10 @@ public class UI {
         if (gp.gameState == gp.optionsState) {
             drawOptionsScreen();
         }
+
+        if (gp.gameState == gp.questionsState) {
+            questions_UI();
+        }
     }
 
     private void drawOptionsScreen() {
@@ -110,21 +115,21 @@ public class UI {
 
     private void options_EndGame(int framex, int framey) {
         int textX = framex + gp.tileSize;
-        int textY = framey + gp.tileSize*3;
+        int textY = framey + gp.tileSize * 3;
 
         currentDialogue = "¿Estas seguro de salir? \nno se guardara el progreso";
 
-        for(String line: currentDialogue.split("\n")){
+        for (String line : currentDialogue.split("\n")) {
             g2.drawString(line, textX, textY);
             textY += 40;
         }
 
         String text = "Si";
         textX = geXForCenteredText(text);
-        textY += gp.tileSize*3;
+        textY += gp.tileSize * 3;
         g2.drawString(text, textX, textY);
         if (commandNum == 0) {
-            g2.drawString(">", textX-25, textY);
+            g2.drawString(">", textX - 25, textY);
             if (gp.keys.enterPressed) {
                 substate = 0;
                 gp.gameState = gp.titleState;
@@ -137,7 +142,7 @@ public class UI {
         textY += gp.tileSize;
         g2.drawString(text, textX, textY);
         if (commandNum == 1) {
-            g2.drawString(">", textX-25, textY);
+            g2.drawString(">", textX - 25, textY);
             if (gp.keys.enterPressed) {
                 substate = 0;
                 commandNum = 4;
@@ -232,6 +237,629 @@ public class UI {
         gp.config.saveCofig();
     }
 
+    public void questions_UI() {
+        g2.setColor(Color.WHITE);
+        g2.setFont(g2.getFont().deriveFont(32F));
+
+        int framex = gp.tileSize * 5;
+        int framey = gp.tileSize;
+        int frameWidth = gp.tileSize * 10;
+        int frameHeight = gp.tileSize * 10;
+        drawSubWindow(framex, framey, frameWidth, frameHeight);
+
+        switch (substate) {
+            case 0:
+                initial_Question(framex, framey);
+                break;
+            case 1:
+                cuestionary1(framex, framey);
+                break;
+            case 2:
+                cuestionary2(framex, framey);
+                break;
+            case 3:
+                cuestionary3(framex, framey);
+                break;
+            case 4:
+                cuestionary4(framex, framey);
+                break;
+            case 5:
+                cuestionary5(framex, framey);
+                break;
+            case 6:
+                cuestionary6(framex, framey);
+                break;
+            case 7:
+                cuestionary7(framex, framey);
+                break;
+            case 8:
+                cuestionary8(framex, framey);
+                break;
+            case 9:
+                finalResults(framex, framey);
+                break;
+        }
+
+        gp.keys.enterPressed = false;
+    }
+
+    private void finalResults(int framex, int framey) {
+        int textX;
+        int textY;
+
+        String text = "Cuestionario";
+        textX = geXForCenteredText(text);
+        textY = framey + gp.tileSize;
+        g2.drawString(text, textX, textY);
+
+        textX = framex + (gp.tileSize + 20);
+        textY += gp.tileSize * 2;
+        currentDialogue = "Tus resultados finales fueron:";
+        for (String line : currentDialogue.split("\n")) {
+            g2.drawString(line, textX, textY);
+            textY += 40;
+        }
+
+        text = String.valueOf(correctAnswers) + "/8";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize * 2;
+        g2.drawString(text, textX, textY);
+
+        text = "¿Reiniciar?";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+
+        text = "Si";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 0) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                substate = 0;
+            }
+        }
+
+        text = "No";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 1) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                substate = 0;
+                gp.gameState = gp.playState;
+            }
+        }
+    }
+
+    private void cuestionary1(int framex, int framey) {
+        int textX;
+        int textY;
+
+        String text = "Cuestionario";
+        textX = geXForCenteredText(text);
+        textY = framey + gp.tileSize;
+        g2.drawString(text, textX, textY);
+
+        textX = framex + (gp.tileSize + 20);
+        textY += gp.tileSize * 2;
+        currentDialogue = "¿Que caracteristica de los \nsistemas tiende al orden?";
+        for (String line : currentDialogue.split("\n")) {
+            g2.drawString(line, textX, textY);
+            textY += 40;
+        }
+
+        text = "Neguentropia";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize * 2;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 0) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("Nice", textX + 175, textY);
+                correctAnswers++;
+                if (gp.keys.enterPressed) {
+                    substate = 2;
+                }
+            }
+        }
+
+        text = "Equidad";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 1) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("X", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 2;
+                }
+            }
+        }
+
+        text = "Equifinalidad";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 2) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("X", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 2;
+                }
+            }
+        }
+    }
+
+    private void cuestionary2(int framex, int framey) {
+        int textX;
+        int textY;
+
+        String text = "Cuestionario";
+        textX = geXForCenteredText(text);
+        textY = framey + gp.tileSize;
+        g2.drawString(text, textX, textY);
+
+        textX = framex + (gp.tileSize + 20);
+        textY += gp.tileSize * 2;
+        currentDialogue = "\"El todo suma mas que \nsus partes\"";
+        for (String line : currentDialogue.split("\n")) {
+            g2.drawString(line, textX, textY);
+            textY += 40;
+        }
+
+        text = "Peter Senge";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize * 2;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 0) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("X", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 3;
+                }
+            }
+        }
+
+        text = "Aristoteles";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 1) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("Nice", textX + 175, textY);
+                correctAnswers++;
+                if (gp.keys.enterPressed) {
+                    substate = 3;
+                }
+            }
+        }
+
+        text = "Bertalanffy";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 2) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("X", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 3;
+                }
+            }
+        }
+    }
+
+    private void cuestionary3(int framex, int framey) {
+        int textX;
+        int textY;
+
+        String text = "Cuestionario";
+        textX = geXForCenteredText(text);
+        textY = framey + gp.tileSize;
+        g2.drawString(text, textX, textY);
+
+        textX = framex + (gp.tileSize + 20);
+        textY += gp.tileSize * 2;
+        currentDialogue = "Tipo de sistema que presenta \nintercambio de energia con \nel ambiente";
+        for (String line : currentDialogue.split("\n")) {
+            g2.drawString(line, textX, textY);
+            textY += 40;
+        }
+
+        text = "sistema cerrado";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize * 2;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 0) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("X", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 4;
+                }
+            }
+        }
+
+        text = "Sistema abierto";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 1) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("Nice", textX + 175, textY);
+                correctAnswers++;
+                if (gp.keys.enterPressed) {
+                    substate = 4;
+                }
+            }
+        }
+
+        text = "Sistema complejo";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 2) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("X", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 4;
+                }
+            }
+        }
+    }
+
+    private void cuestionary4(int framex, int framey) {
+        int textX;
+        int textY;
+
+        String text = "Cuestionario";
+        textX = geXForCenteredText(text);
+        textY = framey + gp.tileSize;
+        g2.drawString(text, textX, textY);
+
+        textX = framex + (gp.tileSize + 20);
+        textY += gp.tileSize * 2;
+        currentDialogue = "Caracteristica de los sistemas que \nsignifica desorden o descontrol";
+        for (String line : currentDialogue.split("\n")) {
+            g2.drawString(line, textX, textY);
+            textY += 40;
+        }
+
+        text = "Entropia";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize * 2;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 0) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("Nice", textX + 175, textY);
+                correctAnswers++;
+                if (gp.keys.enterPressed) {
+                    substate = 5;
+                }
+            }
+        }
+
+        text = "Homeostasis";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 1) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("X", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 5;
+                }
+            }
+        }
+
+        text = "Complejidad";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 2) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("X", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 5;
+                }
+            }
+        }
+    }
+
+    private void cuestionary5(int framex, int framey) {
+        int textX;
+        int textY;
+
+        String text = "Cuestionario";
+        textX = geXForCenteredText(text);
+        textY = framey + gp.tileSize;
+        g2.drawString(text, textX, textY);
+
+        textX = framex + (gp.tileSize + 20);
+        textY += gp.tileSize * 2;
+        currentDialogue = "Padre de la teoria de sistemas";
+        for (String line : currentDialogue.split("\n")) {
+            g2.drawString(line, textX, textY);
+            textY += 40;
+        }
+
+        text = "Aristoteles";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize * 2;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 0) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("X", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 6;
+                }
+            }
+        }
+
+        text = "Peter Senge";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 1) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("X", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 6;
+                }
+            }
+        }
+
+        text = "Bertalanffy";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 2) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("Nice", textX + 175, textY);
+                correctAnswers++;
+                if (gp.keys.enterPressed) {
+                    substate = 6;
+                }
+            }
+        }
+    }
+
+    private void cuestionary6(int framex, int framey) {
+        int textX;
+        int textY;
+
+        String text = "Cuestionario";
+        textX = geXForCenteredText(text);
+        textY = framey + gp.tileSize;
+        g2.drawString(text, textX, textY);
+
+        textX = framex + (gp.tileSize + 20);
+        textY += gp.tileSize * 2;
+        currentDialogue = "Autor de las 11 leyes de creacion \nde sistemas";
+        for (String line : currentDialogue.split("\n")) {
+            g2.drawString(line, textX, textY);
+            textY += 40;
+        }
+
+        text = "Peter Senge";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize * 2;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 0) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("Nice", textX + 175, textY);
+                correctAnswers++;
+                if (gp.keys.enterPressed) {
+                    substate = 7;
+                }
+            }
+        }
+
+        text = "Aristoteles";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 1) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("X", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 7;
+                }
+            }
+        }
+
+        text = "Jenking";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 2) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("X", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 7;
+                }
+            }
+        }
+    }
+
+    private void cuestionary7(int framex, int framey) {
+        int textX;
+        int textY;
+
+        String text = "Cuestionario";
+        textX = geXForCenteredText(text);
+        textY = framey + gp.tileSize;
+        g2.drawString(text, textX, textY);
+
+        textX = framex + (gp.tileSize + 20);
+        textY += gp.tileSize * 2;
+        currentDialogue = "Autor que habla de la \nautoorganizacion de los sistemas";
+        for (String line : currentDialogue.split("\n")) {
+            g2.drawString(line, textX, textY);
+            textY += 40;
+        }
+
+        text = "Jordan";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize * 2;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 0) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("Nice", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 8;
+                }
+            }
+        }
+
+        text = "Beer";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 1) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("Nice", textX + 175, textY);
+                correctAnswers++;
+                if (gp.keys.enterPressed) {
+                    substate = 8;
+                }
+            }
+        }
+
+        text = "Jenking";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 2) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("X", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 8;
+                }
+            }
+        }
+    }
+
+    private void cuestionary8(int framex, int framey) {
+        int textX;
+        int textY;
+
+        String text = "Cuestionario";
+        textX = geXForCenteredText(text);
+        textY = framey + gp.tileSize;
+        g2.drawString(text, textX, textY);
+
+        textX = framex + (gp.tileSize + 20);
+        textY += gp.tileSize * 2;
+        currentDialogue = "Autor que habla de los niveles\n de clasificacion de los sistemas";
+        for (String line : currentDialogue.split("\n")) {
+            g2.drawString(line, textX, textY);
+            textY += 40;
+        }
+
+        text = "Jordan";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize * 2;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 0) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("Nice", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 9;
+                }
+            }
+        }
+
+        text = "Beer";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 1) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("Nice", textX + 175, textY);
+                if (gp.keys.enterPressed) {
+                    substate = 9;
+                }
+            }
+        }
+
+        text = "Boulding";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 2) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                g2.drawString("Nice", textX + 175, textY);
+                correctAnswers++;
+                if (gp.keys.enterPressed) {
+                    substate = 9;
+                }
+            }
+        }
+    }
+
+    private void initial_Question(int framex, int framey) {
+        int textX;
+        int textY;
+
+        correctAnswers = 0;
+        String text = "Cuestionario";
+        textX = geXForCenteredText(text);
+        textY = framey + gp.tileSize;
+        g2.drawString(text, textX, textY);
+
+        textX = framex + (gp.tileSize + 20);
+        textY += gp.tileSize * 2;
+        g2.drawString("¿Quieres iniciar el cuestionario?", textX, textY);
+
+        text = "Si";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize * 3;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 0) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                commandNum = 0;
+                substate = 1;
+            }
+        }
+
+        text = "No";
+        textX = geXForCenteredText(text);
+        textY += gp.tileSize;
+        g2.drawString(text, textX, textY);
+        if (commandNum == 1) {
+            g2.drawString(">", textX - 25, textY);
+            if (gp.keys.enterPressed) {
+                gp.gameState = gp.playState;
+            }
+        }
+    }
+
     public void drawPlayerLife() {
         int x = gp.tileSize / 2;
         int y = gp.tileSize / 2;
@@ -287,19 +915,11 @@ public class UI {
                 g2.drawString(">", x - gp.tileSize, y);
             }
 
-            text = "LOAD GAME";
-            x = geXForCenteredText(text);
-            y += gp.tileSize;
-            g2.drawString(text, x, y);
-            if (commandNum == 1) {
-                g2.drawString(">", x - gp.tileSize, y);
-            }
-
             text = "QUIT";
             x = geXForCenteredText(text);
             y += gp.tileSize;
             g2.drawString(text, x, y);
-            if (commandNum == 2) {
+            if (commandNum == 1) {
                 g2.drawString(">", x - gp.tileSize, y);
             }
         } else if (titleScreenState == 1) {
@@ -403,6 +1023,8 @@ public class UI {
         g2.drawString("Pause", textX, textY);
         textY += gp.tileSize;
         g2.drawString("Options", textX, textY);
+        textY += gp.tileSize;
+        g2.drawString("Cuestionario", textX, textY);
 
         textX = framex + gp.tileSize * 6;
         textY = framey + gp.tileSize * 2;
@@ -414,6 +1036,7 @@ public class UI {
         textY += gp.tileSize;
         g2.drawString("ESC", textX, textY);
         textY += gp.tileSize;
+        g2.drawString("X", textX, textY);
 
         textX = framex + gp.tileSize;
         textY = framey + gp.tileSize * 9;

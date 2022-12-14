@@ -33,7 +33,7 @@ public class KeyHandler implements KeyListener {
 
                 if (code == KeyEvent.VK_S) {
                     gp.ui.commandNum++;
-                    if (gp.ui.commandNum > 2) {
+                    if (gp.ui.commandNum > 1) {
                         gp.ui.commandNum = 0;
                     }
                 }
@@ -46,9 +46,6 @@ public class KeyHandler implements KeyListener {
                             gp.playMusic(0);
                             break;
                         case 1:
-
-                            break;
-                        case 2:
                             System.exit(0);
                             break;
 
@@ -100,7 +97,7 @@ public class KeyHandler implements KeyListener {
 
         }
 
-        if (gp.gameState == gp.playState) {
+        else if (gp.gameState == gp.playState) {
 
             if (code == KeyEvent.VK_W) {
                 wPressed = true;
@@ -137,6 +134,10 @@ public class KeyHandler implements KeyListener {
                     checkDrawTime = false;
                 }
             }
+
+            if (code == KeyEvent.VK_X) {
+                gp.gameState = gp.questionsState;
+            }
         }
 
         else if (gp.gameState == gp.pauseState) {
@@ -153,6 +154,10 @@ public class KeyHandler implements KeyListener {
 
         else if (gp.gameState == gp.optionsState) {
             optionsState(e);
+        }
+
+        else if (gp.gameState == gp.questionsState) {
+            questionsState(e);
         }
 
     }
@@ -242,6 +247,66 @@ public class KeyHandler implements KeyListener {
                     gp.playSE(9);
                 }
             }
+        }
+    }
+
+    public void questionsState(KeyEvent e) {
+        int code = e.getKeyCode();
+
+        if (code == KeyEvent.VK_ENTER) {
+            enterPressed = true;
+        }
+
+        int maxCommandNum = 0;
+        switch (gp.ui.substate) {
+            case 0:
+                maxCommandNum = 1;
+                break;
+
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+                maxCommandNum = 2;
+                break;
+            case 9:
+                maxCommandNum = 1;
+                break;
+        }
+
+        if (code == KeyEvent.VK_W) {
+            gp.ui.commandNum--;
+            gp.playSE(9);
+            if (gp.ui.commandNum < 0) {
+                gp.ui.commandNum = maxCommandNum;
+            }
+        }
+
+        if (code == KeyEvent.VK_S) {
+            gp.ui.commandNum++;
+            gp.playSE(9);
+            if (gp.ui.commandNum > maxCommandNum) {
+                gp.ui.commandNum = 0;
+            }
+        }
+        if (code == KeyEvent.VK_A) {
+            if (gp.ui.substate == 0) {
+                if (gp.ui.commandNum == 1 && gp.music.volumeScale > 0) {
+                    gp.music.volumeScale--;
+                    gp.music.checkVolume();
+                    gp.playSE(9);
+                }
+                if (gp.ui.commandNum == 2 && gp.se.volumeScale > 0) {
+                    gp.se.volumeScale--;
+                    gp.playSE(9);
+                }
+            }
+        }
+        if (code == KeyEvent.VK_D) {
         }
     }
 }

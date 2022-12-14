@@ -26,9 +26,9 @@ public class NPC_OldMan5 extends Entity {
 
     public void setDialogue() {
         dialogues[0] = "Hola!";
-        dialogues[1] = "Conozco sobre TGS";
-        dialogues[2] = "Ludwig Von Bertalanffy fue uno de los primeros en dar el termino de sistema y de intercambios entre sistemas";
-        dialogues[3] = "Tambien señalo la frase de Aristoteles \"El todo es mas que la supa de sus partes\"";
+        dialogues[1] = "Peter Senge, se quien es";
+        dialogues[2] = "Fue el autor de las 11 leyes para tomar en cuenta al desarrollar un sistema";
+        dialogues[3] = "Estas leyes se siguen aplicando hasta el dia de hoy en diferentes ambitos laborales";
     }
 
     public void speak() {
