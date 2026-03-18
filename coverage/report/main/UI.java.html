@@ -1,0 +1,1079 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">main</a> &gt; <span class="el_source">UI.java</span></div><h1>UI.java</h1><pre class="source lang-java linenums">package main;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
+import java.io.File;
+import java.io.IOException;
+
+import object.OBJ_Heart;
+import object.SuperObject;
+
+public class UI {
+
+    public GamePanel gp;
+    public Graphics2D g2;
+    public Font maruMonicaFont;
+    public BufferedImage heart_full, heart_half, heart_blank;
+<span class="fc" id="L21">    public boolean messageOn = false;</span>
+<span class="fc" id="L22">    public String message = &quot;&quot;;</span>
+<span class="fc" id="L23">    public int messageCounter = 0;</span>
+<span class="fc" id="L24">    public boolean gameFinished = false;</span>
+<span class="fc" id="L25">    public String currentDialogue = &quot;&quot;;</span>
+<span class="fc" id="L26">    public int commandNum = 0;</span>
+<span class="fc" id="L27">    public int titleScreenState = 0;</span>
+<span class="fc" id="L28">    int substate = 0;</span>
+<span class="fc" id="L29">    public int correctAnswers = 0;</span>
+
+<span class="fc" id="L31">    public UI(GamePanel gp) {</span>
+<span class="fc" id="L32">        this.gp = gp;</span>
+        try {
+<span class="fc" id="L34">            File is = new File(&quot;./src/Images/Fonts/x12y16pxMaruMonica.ttf&quot;);</span>
+<span class="fc" id="L35">            maruMonicaFont = Font.createFont(Font.TRUETYPE_FONT, is);</span>
+<span class="nc" id="L36">        } catch (FontFormatException e) {</span>
+<span class="nc" id="L37">            e.printStackTrace();</span>
+<span class="nc" id="L38">        } catch (IOException e) {</span>
+<span class="nc" id="L39">            e.printStackTrace();</span>
+<span class="pc" id="L40">        }</span>
+
+<span class="fc" id="L42">        SuperObject heart = new OBJ_Heart(gp);</span>
+<span class="fc" id="L43">        heart_full = heart.image;</span>
+<span class="fc" id="L44">        heart_half = heart.image2;</span>
+<span class="fc" id="L45">        heart_blank = heart.image3;</span>
+<span class="fc" id="L46">    }</span>
+
+    public void showMessage(String message) {
+<span class="nc" id="L49">        this.message = message;</span>
+<span class="nc" id="L50">        messageOn = true;</span>
+<span class="nc" id="L51">    }</span>
+
+    public void draw(Graphics2D g2) {
+<span class="fc" id="L54">        this.g2 = g2;</span>
+<span class="fc" id="L55">        g2.setFont(maruMonicaFont);</span>
+<span class="fc" id="L56">        g2.setColor(Color.WHITE);</span>
+
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (gp.gameState == gp.titleState) {</span>
+<span class="fc" id="L59">            drawTitleScreen();</span>
+        }
+
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (gp.gameState == gp.playState) {</span>
+<span class="fc" id="L63">            drawPlayerLife();</span>
+        }
+
+<span class="pc bpc" id="L66" title="1 of 2 branches missed.">        if (gp.gameState == gp.pauseState) {</span>
+<span class="nc" id="L67">            drawPlayerLife();</span>
+<span class="nc" id="L68">            drawPauseScreen();</span>
+        }
+
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (gp.gameState == gp.dialogueState) {</span>
+<span class="fc" id="L72">            drawPlayerLife();</span>
+<span class="fc" id="L73">            drawDialogueScreen();</span>
+        }
+
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        if (gp.gameState == gp.optionsState) {</span>
+<span class="nc" id="L77">            drawOptionsScreen();</span>
+        }
+
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        if (gp.gameState == gp.questionsState) {</span>
+<span class="nc" id="L81">            questions_UI();</span>
+        }
+<span class="fc" id="L83">    }</span>
+
+    private void drawOptionsScreen() {
+<span class="nc" id="L86">        g2.setColor(Color.WHITE);</span>
+<span class="nc" id="L87">        g2.setFont(g2.getFont().deriveFont(32F));</span>
+
+<span class="nc" id="L89">        int framex = gp.tileSize * 6;</span>
+<span class="nc" id="L90">        int framey = gp.tileSize;</span>
+<span class="nc" id="L91">        int frameWidth = gp.tileSize * 8;</span>
+<span class="nc" id="L92">        int frameHeight = gp.tileSize * 10;</span>
+<span class="nc" id="L93">        drawSubWindow(framex, framey, frameWidth, frameHeight);</span>
+
+<span class="nc bnc" id="L95" title="All 5 branches missed.">        switch (substate) {</span>
+            case 0:
+<span class="nc" id="L97">                options_top(framex, framey);</span>
+<span class="nc" id="L98">                break;</span>
+            case 1:
+<span class="nc" id="L100">                options_fullScreenNotification(framex, framey);</span>
+<span class="nc" id="L101">                break;</span>
+            case 2:
+<span class="nc" id="L103">                options_Control(framex, framey);</span>
+<span class="nc" id="L104">                break;</span>
+            case 3:
+<span class="nc" id="L106">                options_EndGame(framex, framey);</span>
+<span class="nc" id="L107">                break;</span>
+            default:
+
+                break;
+        }
+
+<span class="nc" id="L113">        gp.keys.enterPressed = false;</span>
+<span class="nc" id="L114">    }</span>
+
+    private void options_EndGame(int framex, int framey) {
+<span class="nc" id="L117">        int textX = framex + gp.tileSize;</span>
+<span class="nc" id="L118">        int textY = framey + gp.tileSize * 3;</span>
+
+<span class="nc" id="L120">        currentDialogue = &quot;Â¿Estas seguro de salir? \nno se guardara el progreso&quot;;</span>
+
+<span class="nc bnc" id="L122" title="All 2 branches missed.">        for (String line : currentDialogue.split(&quot;\n&quot;)) {</span>
+<span class="nc" id="L123">            g2.drawString(line, textX, textY);</span>
+<span class="nc" id="L124">            textY += 40;</span>
+        }
+
+<span class="nc" id="L127">        String text = &quot;Si&quot;;</span>
+<span class="nc" id="L128">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L129">        textY += gp.tileSize * 3;</span>
+<span class="nc" id="L130">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        if (commandNum == 0) {</span>
+<span class="nc" id="L132">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L134">                substate = 0;</span>
+<span class="nc" id="L135">                gp.gameState = gp.titleState;</span>
+<span class="nc" id="L136">                gp.stopMusic();</span>
+            }
+        }
+
+<span class="nc" id="L140">        text = &quot;No&quot;;</span>
+<span class="nc" id="L141">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L142">        textY += gp.tileSize;</span>
+<span class="nc" id="L143">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (commandNum == 1) {</span>
+<span class="nc" id="L145">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L147">                substate = 0;</span>
+<span class="nc" id="L148">                commandNum = 4;</span>
+            }
+        }
+<span class="nc" id="L151">    }</span>
+
+    public void options_top(int framex, int framey) {
+        int textX;
+        int textY;
+
+<span class="nc" id="L157">        String text = &quot;Options&quot;;</span>
+<span class="nc" id="L158">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L159">        textY = framey + gp.tileSize;</span>
+<span class="nc" id="L160">        g2.drawString(text, textX, textY);</span>
+
+<span class="nc" id="L162">        textX = framex + gp.tileSize;</span>
+<span class="nc" id="L163">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L164">        g2.drawString(&quot;Full Screen&quot;, textX, textY);</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        if (commandNum == 0) {</span>
+<span class="nc" id="L166">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">            if (gp.keys.enterPressed == true) {</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">                if (gp.fullScreenOn == false) {</span>
+<span class="nc" id="L169">                    gp.fullScreenOn = true;</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">                } else if (gp.fullScreenOn == true) {</span>
+<span class="nc" id="L171">                    gp.fullScreenOn = false;</span>
+                }
+<span class="nc" id="L173">                substate = 1;</span>
+            }
+        }
+
+<span class="nc" id="L177">        textY += gp.tileSize;</span>
+<span class="nc" id="L178">        g2.drawString(&quot;Music&quot;, textX, textY);</span>
+<span class="nc bnc" id="L179" title="All 2 branches missed.">        if (commandNum == 1) {</span>
+<span class="nc" id="L180">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+        }
+
+<span class="nc" id="L183">        textY += gp.tileSize;</span>
+<span class="nc" id="L184">        g2.drawString(&quot;SE&quot;, textX, textY);</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        if (commandNum == 2) {</span>
+<span class="nc" id="L186">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+        }
+
+<span class="nc" id="L189">        textY += gp.tileSize;</span>
+<span class="nc" id="L190">        g2.drawString(&quot;Control&quot;, textX, textY);</span>
+<span class="nc bnc" id="L191" title="All 2 branches missed.">        if (commandNum == 3) {</span>
+<span class="nc" id="L192">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L193" title="All 2 branches missed.">            if (gp.keys.enterPressed == true) {</span>
+<span class="nc" id="L194">                substate = 2;</span>
+<span class="nc" id="L195">                commandNum = 0;</span>
+            }
+        }
+
+<span class="nc" id="L199">        textY += gp.tileSize;</span>
+<span class="nc" id="L200">        g2.drawString(&quot;End Game&quot;, textX, textY);</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">        if (commandNum == 4) {</span>
+<span class="nc" id="L202">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L204">                substate = 3;</span>
+<span class="nc" id="L205">                commandNum = 0;</span>
+            }
+        }
+
+<span class="nc" id="L209">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L210">        g2.drawString(&quot;Back&quot;, textX, textY);</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">        if (commandNum == 5) {</span>
+<span class="nc" id="L212">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L213" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L214">                gp.gameState = gp.playState;</span>
+<span class="nc" id="L215">                commandNum = 0;</span>
+            }
+        }
+
+<span class="nc" id="L219">        textX = framex + (int) (gp.tileSize * 4.5);</span>
+<span class="nc" id="L220">        textY = framey + gp.tileSize * 2 + 24;</span>
+<span class="nc" id="L221">        g2.setStroke(new BasicStroke(3));</span>
+<span class="nc" id="L222">        g2.drawRect(textX, textY, 24, 24);</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        if (gp.fullScreenOn == true) {</span>
+<span class="nc" id="L224">            g2.fillRect(textX, textY, 24, 24);</span>
+        }
+
+<span class="nc" id="L227">        textY += gp.tileSize;</span>
+<span class="nc" id="L228">        g2.drawRect(textX, textY, 120, 24);</span>
+<span class="nc" id="L229">        int volumeWidth = 24 * gp.music.volumeScale;</span>
+<span class="nc" id="L230">        g2.fillRect(textX, textY, volumeWidth, 24);</span>
+
+<span class="nc" id="L232">        textY += gp.tileSize;</span>
+<span class="nc" id="L233">        g2.drawRect(textX, textY, 120, 24);</span>
+<span class="nc" id="L234">        volumeWidth = 24 * gp.se.volumeScale;</span>
+<span class="nc" id="L235">        g2.fillRect(textX, textY, volumeWidth, 24);</span>
+
+<span class="nc" id="L237">        gp.config.saveCofig();</span>
+<span class="nc" id="L238">    }</span>
+
+    public void questions_UI() {
+<span class="nc" id="L241">        g2.setColor(Color.WHITE);</span>
+<span class="nc" id="L242">        g2.setFont(g2.getFont().deriveFont(32F));</span>
+
+<span class="nc" id="L244">        int framex = gp.tileSize * 5;</span>
+<span class="nc" id="L245">        int framey = gp.tileSize;</span>
+<span class="nc" id="L246">        int frameWidth = gp.tileSize * 10;</span>
+<span class="nc" id="L247">        int frameHeight = gp.tileSize * 10;</span>
+<span class="nc" id="L248">        drawSubWindow(framex, framey, frameWidth, frameHeight);</span>
+
+<span class="nc bnc" id="L250" title="All 11 branches missed.">        switch (substate) {</span>
+            case 0:
+<span class="nc" id="L252">                initial_Question(framex, framey);</span>
+<span class="nc" id="L253">                break;</span>
+            case 1:
+<span class="nc" id="L255">                cuestionary1(framex, framey);</span>
+<span class="nc" id="L256">                break;</span>
+            case 2:
+<span class="nc" id="L258">                cuestionary2(framex, framey);</span>
+<span class="nc" id="L259">                break;</span>
+            case 3:
+<span class="nc" id="L261">                cuestionary3(framex, framey);</span>
+<span class="nc" id="L262">                break;</span>
+            case 4:
+<span class="nc" id="L264">                cuestionary4(framex, framey);</span>
+<span class="nc" id="L265">                break;</span>
+            case 5:
+<span class="nc" id="L267">                cuestionary5(framex, framey);</span>
+<span class="nc" id="L268">                break;</span>
+            case 6:
+<span class="nc" id="L270">                cuestionary6(framex, framey);</span>
+<span class="nc" id="L271">                break;</span>
+            case 7:
+<span class="nc" id="L273">                cuestionary7(framex, framey);</span>
+<span class="nc" id="L274">                break;</span>
+            case 8:
+<span class="nc" id="L276">                cuestionary8(framex, framey);</span>
+<span class="nc" id="L277">                break;</span>
+            case 9:
+<span class="nc" id="L279">                finalResults(framex, framey);</span>
+                break;
+        }
+
+<span class="nc" id="L283">        gp.keys.enterPressed = false;</span>
+<span class="nc" id="L284">    }</span>
+
+    private void finalResults(int framex, int framey) {
+        int textX;
+        int textY;
+
+<span class="nc" id="L290">        String text = &quot;Cuestionario&quot;;</span>
+<span class="nc" id="L291">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L292">        textY = framey + gp.tileSize;</span>
+<span class="nc" id="L293">        g2.drawString(text, textX, textY);</span>
+
+<span class="nc" id="L295">        textX = framex + (gp.tileSize + 20);</span>
+<span class="nc" id="L296">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L297">        currentDialogue = &quot;Tus resultados finales fueron:&quot;;</span>
+<span class="nc bnc" id="L298" title="All 2 branches missed.">        for (String line : currentDialogue.split(&quot;\n&quot;)) {</span>
+<span class="nc" id="L299">            g2.drawString(line, textX, textY);</span>
+<span class="nc" id="L300">            textY += 40;</span>
+        }
+
+<span class="nc" id="L303">        text = String.valueOf(correctAnswers) + &quot;/8&quot;;</span>
+<span class="nc" id="L304">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L305">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L306">        g2.drawString(text, textX, textY);</span>
+
+<span class="nc" id="L308">        text = &quot;Â¿Reiniciar?&quot;;</span>
+<span class="nc" id="L309">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L310">        textY += gp.tileSize;</span>
+<span class="nc" id="L311">        g2.drawString(text, textX, textY);</span>
+
+<span class="nc" id="L313">        text = &quot;Si&quot;;</span>
+<span class="nc" id="L314">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L315">        textY += gp.tileSize;</span>
+<span class="nc" id="L316">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L317" title="All 2 branches missed.">        if (commandNum == 0) {</span>
+<span class="nc" id="L318">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L319" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L320">                substate = 0;</span>
+            }
+        }
+
+<span class="nc" id="L324">        text = &quot;No&quot;;</span>
+<span class="nc" id="L325">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L326">        textY += gp.tileSize;</span>
+<span class="nc" id="L327">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L328" title="All 2 branches missed.">        if (commandNum == 1) {</span>
+<span class="nc" id="L329">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L330" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L331">                substate = 0;</span>
+<span class="nc" id="L332">                gp.gameState = gp.playState;</span>
+            }
+        }
+<span class="nc" id="L335">    }</span>
+
+    private void cuestionary1(int framex, int framey) {
+        int textX;
+        int textY;
+
+<span class="nc" id="L341">        String text = &quot;Cuestionario&quot;;</span>
+<span class="nc" id="L342">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L343">        textY = framey + gp.tileSize;</span>
+<span class="nc" id="L344">        g2.drawString(text, textX, textY);</span>
+
+<span class="nc" id="L346">        textX = framex + (gp.tileSize + 20);</span>
+<span class="nc" id="L347">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L348">        currentDialogue = &quot;Â¿Que caracteristica de los \nsistemas tiende al orden?&quot;;</span>
+<span class="nc bnc" id="L349" title="All 2 branches missed.">        for (String line : currentDialogue.split(&quot;\n&quot;)) {</span>
+<span class="nc" id="L350">            g2.drawString(line, textX, textY);</span>
+<span class="nc" id="L351">            textY += 40;</span>
+        }
+
+<span class="nc" id="L354">        text = &quot;Neguentropia&quot;;</span>
+<span class="nc" id="L355">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L356">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L357">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L358" title="All 2 branches missed.">        if (commandNum == 0) {</span>
+<span class="nc" id="L359">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L360" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L361">                g2.drawString(&quot;Nice&quot;, textX + 175, textY);</span>
+<span class="nc" id="L362">                correctAnswers++;</span>
+<span class="nc bnc" id="L363" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L364">                    substate = 2;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L369">        text = &quot;Equidad&quot;;</span>
+<span class="nc" id="L370">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L371">        textY += gp.tileSize;</span>
+<span class="nc" id="L372">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L373" title="All 2 branches missed.">        if (commandNum == 1) {</span>
+<span class="nc" id="L374">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L375" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L376">                g2.drawString(&quot;X&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L377" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L378">                    substate = 2;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L383">        text = &quot;Equifinalidad&quot;;</span>
+<span class="nc" id="L384">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L385">        textY += gp.tileSize;</span>
+<span class="nc" id="L386">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L387" title="All 2 branches missed.">        if (commandNum == 2) {</span>
+<span class="nc" id="L388">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L389" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L390">                g2.drawString(&quot;X&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L391" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L392">                    substate = 2;</span>
+                }
+            }
+        }
+<span class="nc" id="L396">    }</span>
+
+    private void cuestionary2(int framex, int framey) {
+        int textX;
+        int textY;
+
+<span class="nc" id="L402">        String text = &quot;Cuestionario&quot;;</span>
+<span class="nc" id="L403">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L404">        textY = framey + gp.tileSize;</span>
+<span class="nc" id="L405">        g2.drawString(text, textX, textY);</span>
+
+<span class="nc" id="L407">        textX = framex + (gp.tileSize + 20);</span>
+<span class="nc" id="L408">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L409">        currentDialogue = &quot;\&quot;El todo suma mas que \nsus partes\&quot;&quot;;</span>
+<span class="nc bnc" id="L410" title="All 2 branches missed.">        for (String line : currentDialogue.split(&quot;\n&quot;)) {</span>
+<span class="nc" id="L411">            g2.drawString(line, textX, textY);</span>
+<span class="nc" id="L412">            textY += 40;</span>
+        }
+
+<span class="nc" id="L415">        text = &quot;Peter Senge&quot;;</span>
+<span class="nc" id="L416">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L417">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L418">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L419" title="All 2 branches missed.">        if (commandNum == 0) {</span>
+<span class="nc" id="L420">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L421" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L422">                g2.drawString(&quot;X&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L423" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L424">                    substate = 3;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L429">        text = &quot;Aristoteles&quot;;</span>
+<span class="nc" id="L430">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L431">        textY += gp.tileSize;</span>
+<span class="nc" id="L432">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L433" title="All 2 branches missed.">        if (commandNum == 1) {</span>
+<span class="nc" id="L434">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L435" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L436">                g2.drawString(&quot;Nice&quot;, textX + 175, textY);</span>
+<span class="nc" id="L437">                correctAnswers++;</span>
+<span class="nc bnc" id="L438" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L439">                    substate = 3;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L444">        text = &quot;Bertalanffy&quot;;</span>
+<span class="nc" id="L445">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L446">        textY += gp.tileSize;</span>
+<span class="nc" id="L447">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L448" title="All 2 branches missed.">        if (commandNum == 2) {</span>
+<span class="nc" id="L449">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L450" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L451">                g2.drawString(&quot;X&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L452" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L453">                    substate = 3;</span>
+                }
+            }
+        }
+<span class="nc" id="L457">    }</span>
+
+    private void cuestionary3(int framex, int framey) {
+        int textX;
+        int textY;
+
+<span class="nc" id="L463">        String text = &quot;Cuestionario&quot;;</span>
+<span class="nc" id="L464">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L465">        textY = framey + gp.tileSize;</span>
+<span class="nc" id="L466">        g2.drawString(text, textX, textY);</span>
+
+<span class="nc" id="L468">        textX = framex + (gp.tileSize + 20);</span>
+<span class="nc" id="L469">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L470">        currentDialogue = &quot;Tipo de sistema que presenta \nintercambio de energia con \nel ambiente&quot;;</span>
+<span class="nc bnc" id="L471" title="All 2 branches missed.">        for (String line : currentDialogue.split(&quot;\n&quot;)) {</span>
+<span class="nc" id="L472">            g2.drawString(line, textX, textY);</span>
+<span class="nc" id="L473">            textY += 40;</span>
+        }
+
+<span class="nc" id="L476">        text = &quot;sistema cerrado&quot;;</span>
+<span class="nc" id="L477">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L478">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L479">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L480" title="All 2 branches missed.">        if (commandNum == 0) {</span>
+<span class="nc" id="L481">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L482" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L483">                g2.drawString(&quot;X&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L484" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L485">                    substate = 4;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L490">        text = &quot;Sistema abierto&quot;;</span>
+<span class="nc" id="L491">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L492">        textY += gp.tileSize;</span>
+<span class="nc" id="L493">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L494" title="All 2 branches missed.">        if (commandNum == 1) {</span>
+<span class="nc" id="L495">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L496" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L497">                g2.drawString(&quot;Nice&quot;, textX + 175, textY);</span>
+<span class="nc" id="L498">                correctAnswers++;</span>
+<span class="nc bnc" id="L499" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L500">                    substate = 4;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L505">        text = &quot;Sistema complejo&quot;;</span>
+<span class="nc" id="L506">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L507">        textY += gp.tileSize;</span>
+<span class="nc" id="L508">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L509" title="All 2 branches missed.">        if (commandNum == 2) {</span>
+<span class="nc" id="L510">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L511" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L512">                g2.drawString(&quot;X&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L513" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L514">                    substate = 4;</span>
+                }
+            }
+        }
+<span class="nc" id="L518">    }</span>
+
+    private void cuestionary4(int framex, int framey) {
+        int textX;
+        int textY;
+
+<span class="nc" id="L524">        String text = &quot;Cuestionario&quot;;</span>
+<span class="nc" id="L525">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L526">        textY = framey + gp.tileSize;</span>
+<span class="nc" id="L527">        g2.drawString(text, textX, textY);</span>
+
+<span class="nc" id="L529">        textX = framex + (gp.tileSize + 20);</span>
+<span class="nc" id="L530">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L531">        currentDialogue = &quot;Caracteristica de los sistemas que \nsignifica desorden o descontrol&quot;;</span>
+<span class="nc bnc" id="L532" title="All 2 branches missed.">        for (String line : currentDialogue.split(&quot;\n&quot;)) {</span>
+<span class="nc" id="L533">            g2.drawString(line, textX, textY);</span>
+<span class="nc" id="L534">            textY += 40;</span>
+        }
+
+<span class="nc" id="L537">        text = &quot;Entropia&quot;;</span>
+<span class="nc" id="L538">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L539">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L540">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L541" title="All 2 branches missed.">        if (commandNum == 0) {</span>
+<span class="nc" id="L542">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L543" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L544">                g2.drawString(&quot;Nice&quot;, textX + 175, textY);</span>
+<span class="nc" id="L545">                correctAnswers++;</span>
+<span class="nc bnc" id="L546" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L547">                    substate = 5;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L552">        text = &quot;Homeostasis&quot;;</span>
+<span class="nc" id="L553">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L554">        textY += gp.tileSize;</span>
+<span class="nc" id="L555">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L556" title="All 2 branches missed.">        if (commandNum == 1) {</span>
+<span class="nc" id="L557">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L558" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L559">                g2.drawString(&quot;X&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L560" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L561">                    substate = 5;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L566">        text = &quot;Complejidad&quot;;</span>
+<span class="nc" id="L567">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L568">        textY += gp.tileSize;</span>
+<span class="nc" id="L569">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L570" title="All 2 branches missed.">        if (commandNum == 2) {</span>
+<span class="nc" id="L571">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L572" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L573">                g2.drawString(&quot;X&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L574" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L575">                    substate = 5;</span>
+                }
+            }
+        }
+<span class="nc" id="L579">    }</span>
+
+    private void cuestionary5(int framex, int framey) {
+        int textX;
+        int textY;
+
+<span class="nc" id="L585">        String text = &quot;Cuestionario&quot;;</span>
+<span class="nc" id="L586">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L587">        textY = framey + gp.tileSize;</span>
+<span class="nc" id="L588">        g2.drawString(text, textX, textY);</span>
+
+<span class="nc" id="L590">        textX = framex + (gp.tileSize + 20);</span>
+<span class="nc" id="L591">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L592">        currentDialogue = &quot;Padre de la teoria de sistemas&quot;;</span>
+<span class="nc bnc" id="L593" title="All 2 branches missed.">        for (String line : currentDialogue.split(&quot;\n&quot;)) {</span>
+<span class="nc" id="L594">            g2.drawString(line, textX, textY);</span>
+<span class="nc" id="L595">            textY += 40;</span>
+        }
+
+<span class="nc" id="L598">        text = &quot;Aristoteles&quot;;</span>
+<span class="nc" id="L599">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L600">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L601">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L602" title="All 2 branches missed.">        if (commandNum == 0) {</span>
+<span class="nc" id="L603">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L604" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L605">                g2.drawString(&quot;X&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L606" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L607">                    substate = 6;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L612">        text = &quot;Peter Senge&quot;;</span>
+<span class="nc" id="L613">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L614">        textY += gp.tileSize;</span>
+<span class="nc" id="L615">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L616" title="All 2 branches missed.">        if (commandNum == 1) {</span>
+<span class="nc" id="L617">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L618" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L619">                g2.drawString(&quot;X&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L620" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L621">                    substate = 6;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L626">        text = &quot;Bertalanffy&quot;;</span>
+<span class="nc" id="L627">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L628">        textY += gp.tileSize;</span>
+<span class="nc" id="L629">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L630" title="All 2 branches missed.">        if (commandNum == 2) {</span>
+<span class="nc" id="L631">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L632" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L633">                g2.drawString(&quot;Nice&quot;, textX + 175, textY);</span>
+<span class="nc" id="L634">                correctAnswers++;</span>
+<span class="nc bnc" id="L635" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L636">                    substate = 6;</span>
+                }
+            }
+        }
+<span class="nc" id="L640">    }</span>
+
+    private void cuestionary6(int framex, int framey) {
+        int textX;
+        int textY;
+
+<span class="nc" id="L646">        String text = &quot;Cuestionario&quot;;</span>
+<span class="nc" id="L647">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L648">        textY = framey + gp.tileSize;</span>
+<span class="nc" id="L649">        g2.drawString(text, textX, textY);</span>
+
+<span class="nc" id="L651">        textX = framex + (gp.tileSize + 20);</span>
+<span class="nc" id="L652">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L653">        currentDialogue = &quot;Autor de las 11 leyes de creacion \nde sistemas&quot;;</span>
+<span class="nc bnc" id="L654" title="All 2 branches missed.">        for (String line : currentDialogue.split(&quot;\n&quot;)) {</span>
+<span class="nc" id="L655">            g2.drawString(line, textX, textY);</span>
+<span class="nc" id="L656">            textY += 40;</span>
+        }
+
+<span class="nc" id="L659">        text = &quot;Peter Senge&quot;;</span>
+<span class="nc" id="L660">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L661">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L662">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L663" title="All 2 branches missed.">        if (commandNum == 0) {</span>
+<span class="nc" id="L664">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L665" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L666">                g2.drawString(&quot;Nice&quot;, textX + 175, textY);</span>
+<span class="nc" id="L667">                correctAnswers++;</span>
+<span class="nc bnc" id="L668" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L669">                    substate = 7;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L674">        text = &quot;Aristoteles&quot;;</span>
+<span class="nc" id="L675">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L676">        textY += gp.tileSize;</span>
+<span class="nc" id="L677">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L678" title="All 2 branches missed.">        if (commandNum == 1) {</span>
+<span class="nc" id="L679">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L680" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L681">                g2.drawString(&quot;X&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L682" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L683">                    substate = 7;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L688">        text = &quot;Jenking&quot;;</span>
+<span class="nc" id="L689">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L690">        textY += gp.tileSize;</span>
+<span class="nc" id="L691">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L692" title="All 2 branches missed.">        if (commandNum == 2) {</span>
+<span class="nc" id="L693">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L694" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L695">                g2.drawString(&quot;X&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L696" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L697">                    substate = 7;</span>
+                }
+            }
+        }
+<span class="nc" id="L701">    }</span>
+
+    private void cuestionary7(int framex, int framey) {
+        int textX;
+        int textY;
+
+<span class="nc" id="L707">        String text = &quot;Cuestionario&quot;;</span>
+<span class="nc" id="L708">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L709">        textY = framey + gp.tileSize;</span>
+<span class="nc" id="L710">        g2.drawString(text, textX, textY);</span>
+
+<span class="nc" id="L712">        textX = framex + (gp.tileSize + 20);</span>
+<span class="nc" id="L713">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L714">        currentDialogue = &quot;Autor que habla de la \nautoorganizacion de los sistemas&quot;;</span>
+<span class="nc bnc" id="L715" title="All 2 branches missed.">        for (String line : currentDialogue.split(&quot;\n&quot;)) {</span>
+<span class="nc" id="L716">            g2.drawString(line, textX, textY);</span>
+<span class="nc" id="L717">            textY += 40;</span>
+        }
+
+<span class="nc" id="L720">        text = &quot;Jordan&quot;;</span>
+<span class="nc" id="L721">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L722">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L723">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L724" title="All 2 branches missed.">        if (commandNum == 0) {</span>
+<span class="nc" id="L725">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L726" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L727">                g2.drawString(&quot;Nice&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L728" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L729">                    substate = 8;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L734">        text = &quot;Beer&quot;;</span>
+<span class="nc" id="L735">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L736">        textY += gp.tileSize;</span>
+<span class="nc" id="L737">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L738" title="All 2 branches missed.">        if (commandNum == 1) {</span>
+<span class="nc" id="L739">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L740" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L741">                g2.drawString(&quot;Nice&quot;, textX + 175, textY);</span>
+<span class="nc" id="L742">                correctAnswers++;</span>
+<span class="nc bnc" id="L743" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L744">                    substate = 8;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L749">        text = &quot;Jenking&quot;;</span>
+<span class="nc" id="L750">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L751">        textY += gp.tileSize;</span>
+<span class="nc" id="L752">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L753" title="All 2 branches missed.">        if (commandNum == 2) {</span>
+<span class="nc" id="L754">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L755" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L756">                g2.drawString(&quot;X&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L757" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L758">                    substate = 8;</span>
+                }
+            }
+        }
+<span class="nc" id="L762">    }</span>
+
+    private void cuestionary8(int framex, int framey) {
+        int textX;
+        int textY;
+
+<span class="nc" id="L768">        String text = &quot;Cuestionario&quot;;</span>
+<span class="nc" id="L769">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L770">        textY = framey + gp.tileSize;</span>
+<span class="nc" id="L771">        g2.drawString(text, textX, textY);</span>
+
+<span class="nc" id="L773">        textX = framex + (gp.tileSize + 20);</span>
+<span class="nc" id="L774">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L775">        currentDialogue = &quot;Autor que habla de los niveles\n de clasificacion de los sistemas&quot;;</span>
+<span class="nc bnc" id="L776" title="All 2 branches missed.">        for (String line : currentDialogue.split(&quot;\n&quot;)) {</span>
+<span class="nc" id="L777">            g2.drawString(line, textX, textY);</span>
+<span class="nc" id="L778">            textY += 40;</span>
+        }
+
+<span class="nc" id="L781">        text = &quot;Jordan&quot;;</span>
+<span class="nc" id="L782">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L783">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L784">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L785" title="All 2 branches missed.">        if (commandNum == 0) {</span>
+<span class="nc" id="L786">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L787" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L788">                g2.drawString(&quot;Nice&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L789" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L790">                    substate = 9;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L795">        text = &quot;Beer&quot;;</span>
+<span class="nc" id="L796">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L797">        textY += gp.tileSize;</span>
+<span class="nc" id="L798">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L799" title="All 2 branches missed.">        if (commandNum == 1) {</span>
+<span class="nc" id="L800">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L801" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L802">                g2.drawString(&quot;Nice&quot;, textX + 175, textY);</span>
+<span class="nc bnc" id="L803" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L804">                    substate = 9;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L809">        text = &quot;Boulding&quot;;</span>
+<span class="nc" id="L810">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L811">        textY += gp.tileSize;</span>
+<span class="nc" id="L812">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L813" title="All 2 branches missed.">        if (commandNum == 2) {</span>
+<span class="nc" id="L814">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L815" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L816">                g2.drawString(&quot;Nice&quot;, textX + 175, textY);</span>
+<span class="nc" id="L817">                correctAnswers++;</span>
+<span class="nc bnc" id="L818" title="All 2 branches missed.">                if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L819">                    substate = 9;</span>
+                }
+            }
+        }
+<span class="nc" id="L823">    }</span>
+
+    private void initial_Question(int framex, int framey) {
+        int textX;
+        int textY;
+
+<span class="nc" id="L829">        correctAnswers = 0;</span>
+<span class="nc" id="L830">        String text = &quot;Cuestionario&quot;;</span>
+<span class="nc" id="L831">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L832">        textY = framey + gp.tileSize;</span>
+<span class="nc" id="L833">        g2.drawString(text, textX, textY);</span>
+
+<span class="nc" id="L835">        textX = framex + (gp.tileSize + 20);</span>
+<span class="nc" id="L836">        textY += gp.tileSize * 2;</span>
+<span class="nc" id="L837">        g2.drawString(&quot;Â¿Quieres iniciar el cuestionario?&quot;, textX, textY);</span>
+
+<span class="nc" id="L839">        text = &quot;Si&quot;;</span>
+<span class="nc" id="L840">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L841">        textY += gp.tileSize * 3;</span>
+<span class="nc" id="L842">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L843" title="All 2 branches missed.">        if (commandNum == 0) {</span>
+<span class="nc" id="L844">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L845" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L846">                commandNum = 0;</span>
+<span class="nc" id="L847">                substate = 1;</span>
+            }
+        }
+
+<span class="nc" id="L851">        text = &quot;No&quot;;</span>
+<span class="nc" id="L852">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L853">        textY += gp.tileSize;</span>
+<span class="nc" id="L854">        g2.drawString(text, textX, textY);</span>
+<span class="nc bnc" id="L855" title="All 2 branches missed.">        if (commandNum == 1) {</span>
+<span class="nc" id="L856">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L857" title="All 2 branches missed.">            if (gp.keys.enterPressed) {</span>
+<span class="nc" id="L858">                gp.gameState = gp.playState;</span>
+            }
+        }
+<span class="nc" id="L861">    }</span>
+
+    public void drawPlayerLife() {
+<span class="fc" id="L864">        int x = gp.tileSize / 2;</span>
+<span class="fc" id="L865">        int y = gp.tileSize / 2;</span>
+<span class="fc" id="L866">        int i = 0;</span>
+
+<span class="fc bfc" id="L868" title="All 2 branches covered.">        while (i &lt; gp.player.maxLife / 2) {</span>
+<span class="fc" id="L869">            g2.drawImage(heart_blank, x, y, null);</span>
+<span class="fc" id="L870">            i++;</span>
+<span class="fc" id="L871">            x += gp.tileSize;</span>
+        }
+
+<span class="fc" id="L874">        x = gp.tileSize / 2;</span>
+<span class="fc" id="L875">        y = gp.tileSize / 2;</span>
+<span class="fc" id="L876">        i = 0;</span>
+
+<span class="fc bfc" id="L878" title="All 2 branches covered.">        while (i &lt; gp.player.life) {</span>
+<span class="fc" id="L879">            g2.drawImage(heart_half, x, y, null);</span>
+<span class="fc" id="L880">            i++;</span>
+<span class="pc bpc" id="L881" title="1 of 2 branches missed.">            if (i &lt; gp.player.life) {</span>
+<span class="fc" id="L882">                g2.drawImage(heart_full, x, y, null);</span>
+            }
+<span class="fc" id="L884">            i++;</span>
+<span class="fc" id="L885">            x += gp.tileSize;</span>
+        }
+<span class="fc" id="L887">    }</span>
+
+    public void drawTitleScreen() {
+<span class="pc bpc" id="L890" title="1 of 2 branches missed.">        if (titleScreenState == 0) {</span>
+<span class="fc" id="L891">            g2.setColor(new Color(80, 70, 182));</span>
+<span class="fc" id="L892">            g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);</span>
+
+<span class="fc" id="L894">            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 96F));</span>
+<span class="fc" id="L895">            String text = &quot;Blue boy Adventure&quot;;</span>
+<span class="fc" id="L896">            int x = geXForCenteredText(text);</span>
+<span class="fc" id="L897">            int y = gp.tileSize * 3;</span>
+
+<span class="fc" id="L899">            g2.setColor(Color.BLACK);</span>
+<span class="fc" id="L900">            g2.drawString(text, x + 5, y + 5);</span>
+
+<span class="fc" id="L902">            g2.setColor(Color.WHITE);</span>
+<span class="fc" id="L903">            g2.drawString(text, x, y);</span>
+
+<span class="fc" id="L905">            x = (gp.screenWidth / 2) - (gp.tileSize * 2) / 2;</span>
+<span class="fc" id="L906">            y += gp.tileSize * 2;</span>
+<span class="fc" id="L907">            g2.drawImage(gp.player.down1, x, y, gp.tileSize * 2, gp.tileSize * 2, null);</span>
+
+<span class="fc" id="L909">            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 48F));</span>
+<span class="fc" id="L910">            text = &quot;NEW GAME&quot;;</span>
+<span class="fc" id="L911">            x = geXForCenteredText(text);</span>
+<span class="fc" id="L912">            y += gp.tileSize * 3.5;</span>
+<span class="fc" id="L913">            g2.drawString(text, x, y);</span>
+<span class="pc bpc" id="L914" title="1 of 2 branches missed.">            if (commandNum == 0) {</span>
+<span class="fc" id="L915">                g2.drawString(&quot;&gt;&quot;, x - gp.tileSize, y);</span>
+            }
+
+<span class="fc" id="L918">            text = &quot;QUIT&quot;;</span>
+<span class="fc" id="L919">            x = geXForCenteredText(text);</span>
+<span class="fc" id="L920">            y += gp.tileSize;</span>
+<span class="fc" id="L921">            g2.drawString(text, x, y);</span>
+<span class="pc bpc" id="L922" title="1 of 2 branches missed.">            if (commandNum == 1) {</span>
+<span class="nc" id="L923">                g2.drawString(&quot;&gt;&quot;, x - gp.tileSize, y);</span>
+            }
+<span class="pc bnc" id="L925" title="All 2 branches missed.">        } else if (titleScreenState == 1) {</span>
+<span class="nc" id="L926">            g2.setColor(Color.WHITE);</span>
+<span class="nc" id="L927">            g2.setFont(g2.getFont().deriveFont(42F));</span>
+
+<span class="nc" id="L929">            String text = &quot;Select your class!&quot;;</span>
+<span class="nc" id="L930">            int x = geXForCenteredText(text);</span>
+<span class="nc" id="L931">            int y = gp.tileSize * 3;</span>
+<span class="nc" id="L932">            g2.drawString(text, x, y);</span>
+
+<span class="nc" id="L934">            text = &quot;Fighter&quot;;</span>
+<span class="nc" id="L935">            x = geXForCenteredText(text);</span>
+<span class="nc" id="L936">            y += gp.tileSize;</span>
+<span class="nc" id="L937">            g2.drawString(text, x, y);</span>
+<span class="nc bnc" id="L938" title="All 2 branches missed.">            if (commandNum == 0) {</span>
+<span class="nc" id="L939">                g2.drawString(&quot;&gt;&quot;, x - gp.tileSize, y);</span>
+            }
+
+<span class="nc" id="L942">            text = &quot;Mage&quot;;</span>
+<span class="nc" id="L943">            x = geXForCenteredText(text);</span>
+<span class="nc" id="L944">            y += gp.tileSize;</span>
+<span class="nc" id="L945">            g2.drawString(text, x, y);</span>
+<span class="nc bnc" id="L946" title="All 2 branches missed.">            if (commandNum == 1) {</span>
+<span class="nc" id="L947">                g2.drawString(&quot;&gt;&quot;, x - gp.tileSize, y);</span>
+            }
+
+<span class="nc" id="L950">            text = &quot;Assasin&quot;;</span>
+<span class="nc" id="L951">            x = geXForCenteredText(text);</span>
+<span class="nc" id="L952">            y += gp.tileSize;</span>
+<span class="nc" id="L953">            g2.drawString(text, x, y);</span>
+<span class="nc bnc" id="L954" title="All 2 branches missed.">            if (commandNum == 2) {</span>
+<span class="nc" id="L955">                g2.drawString(&quot;&gt;&quot;, x - gp.tileSize, y);</span>
+            }
+
+<span class="nc" id="L958">            text = &quot;Back&quot;;</span>
+<span class="nc" id="L959">            x = geXForCenteredText(text);</span>
+<span class="nc" id="L960">            y += gp.tileSize * 2;</span>
+<span class="nc" id="L961">            g2.drawString(text, x, y);</span>
+<span class="nc bnc" id="L962" title="All 2 branches missed.">            if (commandNum == 3) {</span>
+<span class="nc" id="L963">                g2.drawString(&quot;&gt;&quot;, x - gp.tileSize, y);</span>
+            }
+        }
+
+<span class="fc" id="L967">    }</span>
+
+    private void drawDialogueScreen() {
+<span class="fc" id="L970">        int x = gp.tileSize * 2;</span>
+<span class="fc" id="L971">        int y = gp.tileSize / 2;</span>
+<span class="fc" id="L972">        int width = gp.screenWidth - (gp.tileSize * 4);</span>
+<span class="fc" id="L973">        int height = gp.tileSize * 4;</span>
+<span class="fc" id="L974">        drawSubWindow(x, y, width, height);</span>
+
+<span class="fc" id="L976">        x += gp.tileSize;</span>
+<span class="fc" id="L977">        y += gp.tileSize;</span>
+
+<span class="fc bfc" id="L979" title="All 2 branches covered.">        for (String line : currentDialogue.split(&quot;\n&quot;)) {</span>
+<span class="fc" id="L980">            g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 28F));</span>
+<span class="fc" id="L981">            g2.drawString(line, x, y);</span>
+<span class="fc" id="L982">            y += 40;</span>
+        }
+
+<span class="fc" id="L985">    }</span>
+
+    public void options_fullScreenNotification(int framex, int framey) {
+<span class="nc" id="L988">        int textX = framex + gp.tileSize;</span>
+<span class="nc" id="L989">        int textY = framey + gp.tileSize * 3;</span>
+
+<span class="nc" id="L991">        currentDialogue = &quot;El cambio tendra \nefecto al reiniciar el \njuego&quot;;</span>
+
+<span class="nc bnc" id="L993" title="All 2 branches missed.">        for (String line : currentDialogue.split(&quot;\n&quot;)) {</span>
+<span class="nc" id="L994">            g2.drawString(line, textX, textY);</span>
+<span class="nc" id="L995">            textY += 40;</span>
+        }
+
+<span class="nc" id="L998">        textY = framey + gp.tileSize * 9;</span>
+<span class="nc" id="L999">        g2.drawString(&quot;Back&quot;, textX, textY);</span>
+<span class="nc bnc" id="L1000" title="All 2 branches missed.">        if (commandNum == 0) {</span>
+<span class="nc" id="L1001">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L1002" title="All 2 branches missed.">            if (gp.keys.enterPressed == true) {</span>
+<span class="nc" id="L1003">                substate = 0;</span>
+            }
+        }
+<span class="nc" id="L1006">    }</span>
+
+    public void options_Control(int framex, int framey) {
+        int textX;
+        int textY;
+
+<span class="nc" id="L1012">        String text = &quot;Control&quot;;</span>
+<span class="nc" id="L1013">        textX = geXForCenteredText(text);</span>
+<span class="nc" id="L1014">        textY = framey + gp.tileSize;</span>
+<span class="nc" id="L1015">        g2.drawString(text, textX, textY);</span>
+
+<span class="nc" id="L1017">        textX = framex + gp.tileSize;</span>
+<span class="nc" id="L1018">        textY += gp.tileSize;</span>
+<span class="nc" id="L1019">        g2.drawString(&quot;Move&quot;, textX, textY);</span>
+<span class="nc" id="L1020">        textY += gp.tileSize;</span>
+<span class="nc" id="L1021">        g2.drawString(&quot;Confirm&quot;, textX, textY);</span>
+<span class="nc" id="L1022">        textY += gp.tileSize;</span>
+<span class="nc" id="L1023">        g2.drawString(&quot;Pause&quot;, textX, textY);</span>
+<span class="nc" id="L1024">        textY += gp.tileSize;</span>
+<span class="nc" id="L1025">        g2.drawString(&quot;Options&quot;, textX, textY);</span>
+<span class="nc" id="L1026">        textY += gp.tileSize;</span>
+<span class="nc" id="L1027">        g2.drawString(&quot;Cuestionario&quot;, textX, textY);</span>
+
+<span class="nc" id="L1029">        textX = framex + gp.tileSize * 6;</span>
+<span class="nc" id="L1030">        textY = framey + gp.tileSize * 2;</span>
+<span class="nc" id="L1031">        g2.drawString(&quot;WASD&quot;, textX, textY);</span>
+<span class="nc" id="L1032">        textY += gp.tileSize;</span>
+<span class="nc" id="L1033">        g2.drawString(&quot;ENTER&quot;, textX, textY);</span>
+<span class="nc" id="L1034">        textY += gp.tileSize;</span>
+<span class="nc" id="L1035">        g2.drawString(&quot;P&quot;, textX, textY);</span>
+<span class="nc" id="L1036">        textY += gp.tileSize;</span>
+<span class="nc" id="L1037">        g2.drawString(&quot;ESC&quot;, textX, textY);</span>
+<span class="nc" id="L1038">        textY += gp.tileSize;</span>
+<span class="nc" id="L1039">        g2.drawString(&quot;X&quot;, textX, textY);</span>
+
+<span class="nc" id="L1041">        textX = framex + gp.tileSize;</span>
+<span class="nc" id="L1042">        textY = framey + gp.tileSize * 9;</span>
+<span class="nc" id="L1043">        g2.drawString(&quot;Back&quot;, textX, textY);</span>
+<span class="nc bnc" id="L1044" title="All 2 branches missed.">        if (commandNum == 0) {</span>
+<span class="nc" id="L1045">            g2.drawString(&quot;&gt;&quot;, textX - 25, textY);</span>
+<span class="nc bnc" id="L1046" title="All 2 branches missed.">            if (gp.keys.enterPressed == true) {</span>
+<span class="nc" id="L1047">                substate = 0;</span>
+<span class="nc" id="L1048">                commandNum = 3;</span>
+            }
+        }
+<span class="nc" id="L1051">    }</span>
+
+    public void drawSubWindow(int x, int y, int width, int height) {
+<span class="fc" id="L1054">        Color c = new Color(0, 0, 0, 210);</span>
+<span class="fc" id="L1055">        g2.setColor(c);</span>
+<span class="fc" id="L1056">        g2.fillRoundRect(x, y, width, height, 35, 35);</span>
+
+<span class="fc" id="L1058">        c = new Color(255, 255, 255);</span>
+<span class="fc" id="L1059">        g2.setStroke(new BasicStroke(5));</span>
+<span class="fc" id="L1060">        g2.setColor(c);</span>
+<span class="fc" id="L1061">        g2.drawRoundRect(x + 5, y + 5, width - 10, height - 10, 25, 25);</span>
+<span class="fc" id="L1062">    }</span>
+
+    public void drawPauseScreen() {
+<span class="nc" id="L1065">        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 80F));</span>
+<span class="nc" id="L1066">        String text = &quot;PAUSA&quot;;</span>
+<span class="nc" id="L1067">        int x = geXForCenteredText(text);</span>
+<span class="nc" id="L1068">        int y = gp.screenHeight / 2;</span>
+
+<span class="nc" id="L1070">        g2.drawString(text, x, y);</span>
+<span class="nc" id="L1071">    }</span>
+
+    public int geXForCenteredText(String text) {
+<span class="fc" id="L1074">        int length = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth();</span>
+<span class="fc" id="L1075">        int x = gp.screenWidth / 2 - length / 2;</span>
+<span class="fc" id="L1076">        return x;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

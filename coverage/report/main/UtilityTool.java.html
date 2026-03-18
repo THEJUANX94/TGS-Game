@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UtilityTool.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">main</a> &gt; <span class="el_source">UtilityTool.java</span></div><h1>UtilityTool.java</h1><pre class="source lang-java linenums">package main;
+
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+<span class="fc" id="L6">public class UtilityTool {</span>
+
+    public BufferedImage scaleImage(BufferedImage original, int width, int height) {
+<span class="fc" id="L9">        BufferedImage scaledImage = new BufferedImage(width, height, original.getType());</span>
+<span class="fc" id="L10">        Graphics2D g2 = scaledImage.createGraphics();</span>
+<span class="fc" id="L11">        g2.drawImage(original, 0, 0, width, height, null);</span>
+<span class="fc" id="L12">        g2.dispose();</span>
+<span class="fc" id="L13">        return scaledImage;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TileManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">Tile</a> &gt; <span class="el_source">TileManager.java</span></div><h1>TileManager.java</h1><pre class="source lang-java linenums">package Tile;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.awt.*;
+import javax.imageio.ImageIO;
+
+import main.GamePanel;
+import main.UtilityTool;
+
+public class TileManager {
+
+    private GamePanel gp;
+    public Tile[] tile;
+    public int mapTileNum[][];
+
+<span class="fc" id="L20">    public TileManager(GamePanel gp) {</span>
+<span class="fc" id="L21">        this.gp = gp;</span>
+<span class="fc" id="L22">        tile = new Tile[50];</span>
+<span class="fc" id="L23">        mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];</span>
+<span class="fc" id="L24">        getTileImage();</span>
+<span class="fc" id="L25">        loadMap(&quot;./src/Images/MapsCodes/WorldMapV3.txt&quot;);</span>
+<span class="fc" id="L26">    }</span>
+
+    public void loadMap(String pathMap) {
+        try {
+<span class="fc" id="L30">            FileInputStream file = new FileInputStream(new File(pathMap));</span>
+<span class="fc" id="L31">            BufferedReader br = new BufferedReader(new InputStreamReader(file));</span>
+
+<span class="fc" id="L33">            int col = 0;</span>
+<span class="fc" id="L34">            int row = 0;</span>
+<span class="pc bpc" id="L35" title="1 of 4 branches missed.">            while (col &lt; gp.maxWorldCol &amp;&amp; row &lt; gp.maxWorldRow) {</span>
+<span class="fc" id="L36">                String line = br.readLine();</span>
+
+<span class="fc bfc" id="L38" title="All 2 branches covered.">                while (col &lt; gp.maxWorldCol) {</span>
+<span class="fc" id="L39">                    String numbers[] = line.split(&quot; &quot;);</span>
+<span class="fc" id="L40">                    int num = Integer.parseInt(numbers[col]);</span>
+
+<span class="fc" id="L42">                    mapTileNum[col][row] = num;</span>
+<span class="fc" id="L43">                    col++;</span>
+<span class="fc" id="L44">                }</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">                if (col == gp.maxWorldCol) {</span>
+<span class="fc" id="L46">                    col = 0;</span>
+<span class="fc" id="L47">                    row++;</span>
+                }
+<span class="fc" id="L49">            }</span>
+<span class="fc" id="L50">            br.close();</span>
+<span class="nc" id="L51">        } catch (Exception e) {</span>
+
+<span class="fc" id="L53">        }</span>
+<span class="fc" id="L54">    }</span>
+
+    public void getTileImage() {
+
+        //PLACEHOLDER
+<span class="fc" id="L59">        setUp(0, &quot;grass00&quot;, false);</span>
+<span class="fc" id="L60">        setUp(1, &quot;grass00&quot;, false);</span>
+<span class="fc" id="L61">        setUp(2, &quot;grass00&quot;, false);</span>
+<span class="fc" id="L62">        setUp(3, &quot;grass00&quot;, false);</span>
+<span class="fc" id="L63">        setUp(4, &quot;grass00&quot;, false);</span>
+<span class="fc" id="L64">        setUp(5, &quot;grass00&quot;, false);</span>
+<span class="fc" id="L65">        setUp(6, &quot;grass00&quot;, false);</span>
+<span class="fc" id="L66">        setUp(7, &quot;grass00&quot;, false);</span>
+<span class="fc" id="L67">        setUp(8, &quot;grass00&quot;, false);</span>
+<span class="fc" id="L68">        setUp(9, &quot;grass00&quot;, false);</span>
+
+
+<span class="fc" id="L71">        setUp(10, &quot;grass00&quot;, false);</span>
+<span class="fc" id="L72">        setUp(11, &quot;grass01&quot;, false);</span>
+<span class="fc" id="L73">        setUp(12, &quot;water00&quot;, true);</span>
+<span class="fc" id="L74">        setUp(13, &quot;water01&quot;, true);</span>
+<span class="fc" id="L75">        setUp(14, &quot;water02&quot;, true);</span>
+<span class="fc" id="L76">        setUp(15, &quot;water03&quot;, true);</span>
+<span class="fc" id="L77">        setUp(16, &quot;water04&quot;, true);</span>
+<span class="fc" id="L78">        setUp(17, &quot;water05&quot;, true);</span>
+<span class="fc" id="L79">        setUp(18, &quot;water06&quot;, true);</span>
+<span class="fc" id="L80">        setUp(19, &quot;water07&quot;, true);</span>
+<span class="fc" id="L81">        setUp(20, &quot;water08&quot;, true);</span>
+<span class="fc" id="L82">        setUp(21, &quot;water09&quot;, true);</span>
+<span class="fc" id="L83">        setUp(22, &quot;water10&quot;, true);</span>
+<span class="fc" id="L84">        setUp(23, &quot;water11&quot;, true);</span>
+<span class="fc" id="L85">        setUp(24, &quot;water12&quot;, true);</span>
+<span class="fc" id="L86">        setUp(25, &quot;water13&quot;, true);</span>
+<span class="fc" id="L87">        setUp(26, &quot;road00&quot;, false);</span>
+<span class="fc" id="L88">        setUp(27, &quot;road01&quot;, false);</span>
+<span class="fc" id="L89">        setUp(28, &quot;road02&quot;, false);</span>
+<span class="fc" id="L90">        setUp(29, &quot;road03&quot;, false);</span>
+<span class="fc" id="L91">        setUp(30, &quot;road04&quot;, false);</span>
+<span class="fc" id="L92">        setUp(31, &quot;road05&quot;, false);</span>
+<span class="fc" id="L93">        setUp(32, &quot;road06&quot;, false);</span>
+<span class="fc" id="L94">        setUp(33, &quot;road07&quot;, false);</span>
+<span class="fc" id="L95">        setUp(34, &quot;road08&quot;, false);</span>
+<span class="fc" id="L96">        setUp(35, &quot;road09&quot;, false);</span>
+<span class="fc" id="L97">        setUp(36, &quot;road10&quot;, false);</span>
+<span class="fc" id="L98">        setUp(37, &quot;road11&quot;, false);</span>
+<span class="fc" id="L99">        setUp(38, &quot;road12&quot;, false);</span>
+<span class="fc" id="L100">        setUp(39, &quot;earth&quot;, false);</span>
+<span class="fc" id="L101">        setUp(40, &quot;wall&quot;, true);</span>
+<span class="fc" id="L102">        setUp(41, &quot;tree&quot;, true);</span>
+<span class="fc" id="L103">        setUp(42, &quot;floor01&quot;, false);</span>
+<span class="fc" id="L104">        setUp(43, &quot;hut&quot;, true);</span>
+
+<span class="fc" id="L106">    }</span>
+
+    public void setUp(int index, String imageName, boolean collision) {
+<span class="fc" id="L109">        UtilityTool uTool = new UtilityTool();</span>
+        try {
+<span class="fc" id="L111">            tile[index] = new Tile();</span>
+<span class="fc" id="L112">            tile[index].image = ImageIO.read(new File(&quot;./src/Images/MapImages/&quot; + imageName + &quot;.png&quot;));</span>
+<span class="fc" id="L113">            tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);</span>
+<span class="fc" id="L114">            tile[index].collision = collision;</span>
+<span class="nc" id="L115">        } catch (IOException e) {</span>
+<span class="nc" id="L116">            e.printStackTrace();</span>
+<span class="fc" id="L117">        }</span>
+<span class="fc" id="L118">    }</span>
+
+    public void draw(Graphics2D g2) {
+<span class="fc" id="L121">        int worldCol = 0;</span>
+<span class="fc" id="L122">        int worldRow = 0;</span>
+
+<span class="pc bpc" id="L124" title="1 of 4 branches missed.">        while (worldCol &lt; gp.maxWorldCol &amp;&amp; worldRow &lt; gp.maxWorldRow) {</span>
+<span class="fc" id="L125">            int tileNum = mapTileNum[worldCol][worldRow];</span>
+<span class="fc" id="L126">            int worldX = worldCol * gp.tileSize;</span>
+<span class="fc" id="L127">            int worldY = worldRow * gp.tileSize;</span>
+<span class="fc" id="L128">            int screenX = worldX - gp.player.worldX + gp.player.screenX;</span>
+<span class="fc" id="L129">            int screenY = worldY - gp.player.worldY + gp.player.screenY;</span>
+
+<span class="fc bfc" id="L131" title="All 8 branches covered.">            if (worldX + gp.tileSize &gt; gp.player.worldX - gp.player.screenX</span>
+                    &amp;&amp; worldX - gp.tileSize &lt; gp.player.worldX + gp.player.screenX
+                    &amp;&amp; worldY + gp.tileSize &gt; gp.player.worldY - gp.player.screenY
+                    &amp;&amp; worldY - gp.tileSize &lt; gp.player.worldY + gp.player.screenY) {
+
+<span class="fc" id="L136">                g2.drawImage(tile[tileNum].image, screenX, screenY, null);</span>
+            }
+<span class="fc" id="L138">            worldCol++;</span>
+<span class="fc bfc" id="L139" title="All 2 branches covered.">            if (worldCol == gp.maxWorldCol) {</span>
+<span class="fc" id="L140">                worldCol = 0;</span>
+<span class="fc" id="L141">                worldRow++;</span>
+            }
+<span class="fc" id="L143">        }</span>
+<span class="fc" id="L144">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

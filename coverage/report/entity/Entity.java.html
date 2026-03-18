@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Entity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">entity</a> &gt; <span class="el_source">Entity.java</span></div><h1>Entity.java</h1><pre class="source lang-java linenums">package entity;
+
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+import main.GamePanel;
+import main.UtilityTool;
+
+public class Entity {
+
+    public int worldX, worldY;
+    public int speed;
+
+    public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
+    public String direction;
+
+<span class="fc" id="L22">    public int spriteCounter = 0;</span>
+<span class="fc" id="L23">    public int spriteNum = 1;</span>
+
+<span class="fc" id="L25">    public Rectangle solidArea = new Rectangle(0, 0, 48, 48);</span>
+    public int solidAreaDefaultX, solidAreaDefaultY;
+<span class="fc" id="L27">    public boolean collisionOn = false;</span>
+<span class="fc" id="L28">    public int actionLockCounter = 0;</span>
+    public GamePanel gp;
+
+<span class="fc" id="L31">    public String dialogues[] = new String[20];</span>
+<span class="fc" id="L32">    public int dialogueIndex = 0;</span>
+
+    public int maxLife;
+    public int life;
+
+<span class="fc" id="L37">    public Entity(GamePanel gp) {</span>
+<span class="fc" id="L38">        this.gp = gp;</span>
+<span class="fc" id="L39">    }</span>
+
+    public void setAction() {
+
+<span class="nc" id="L43">    }</span>
+
+    public void speak() {
+<span class="fc bfc" id="L46" title="All 2 branches covered.">        if (dialogues[dialogueIndex] == null) {</span>
+<span class="fc" id="L47">            dialogueIndex = 0;</span>
+        }
+<span class="fc" id="L49">        gp.ui.currentDialogue = dialogues[dialogueIndex];</span>
+<span class="fc" id="L50">        dialogueIndex++;</span>
+
+<span class="pc bpc" id="L52" title="3 of 5 branches missed.">        switch (gp.player.direction) {</span>
+            case &quot;up&quot;:
+<span class="fc" id="L54">                direction = &quot;down&quot;;</span>
+<span class="fc" id="L55">                break;</span>
+            case &quot;down&quot;:
+<span class="nc" id="L57">                direction = &quot;up&quot;;</span>
+<span class="nc" id="L58">                break;</span>
+            case &quot;left&quot;:
+<span class="nc" id="L60">                direction = &quot;right&quot;;</span>
+<span class="nc" id="L61">                break;</span>
+            case &quot;right&quot;:
+<span class="fc" id="L63">                direction = &quot;left&quot;;</span>
+                break;
+        }
+<span class="fc" id="L66">    }</span>
+
+    public void update() {
+<span class="nc" id="L69">        setAction();</span>
+<span class="nc" id="L70">        collisionOn = false;</span>
+<span class="nc" id="L71">        gp.cChecker.checkTile(this);</span>
+<span class="nc" id="L72">        gp.cChecker.checkObject(this, false);</span>
+<span class="nc" id="L73">        gp.cChecker.checkPlayer(this);</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (collisionOn == false) {</span>
+<span class="nc bnc" id="L75" title="All 5 branches missed.">            switch (direction) {</span>
+                case &quot;up&quot;:
+<span class="nc" id="L77">                    worldY -= speed;</span>
+<span class="nc" id="L78">                    break;</span>
+                case &quot;down&quot;:
+<span class="nc" id="L80">                    worldY += speed;</span>
+<span class="nc" id="L81">                    break;</span>
+                case &quot;left&quot;:
+<span class="nc" id="L83">                    worldX -= speed;</span>
+<span class="nc" id="L84">                    break;</span>
+                case &quot;right&quot;:
+<span class="nc" id="L86">                    worldX += speed;</span>
+                    break;
+            }
+        }
+
+<span class="nc" id="L91">        spriteCounter++;</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (spriteCounter &gt; 12) {</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (spriteNum == 1) {</span>
+<span class="nc" id="L94">                spriteNum = 2;</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">            } else if (spriteNum == 2) {</span>
+<span class="nc" id="L96">                spriteNum = 1;</span>
+            }
+<span class="nc" id="L98">            spriteCounter = 0;</span>
+        }
+<span class="nc" id="L100">    }</span>
+
+    public void draw(Graphics2D g2) {
+<span class="fc" id="L103">        int screenX = worldX - gp.player.worldX + gp.player.screenX;</span>
+<span class="fc" id="L104">        int screenY = worldY - gp.player.worldY + gp.player.screenY;</span>
+
+<span class="fc bfc" id="L106" title="All 8 branches covered.">        if (worldX + gp.tileSize &gt; gp.player.worldX - gp.player.screenX</span>
+                &amp;&amp; worldX - gp.tileSize &lt; gp.player.worldX + gp.player.screenX
+                &amp;&amp; worldY + gp.tileSize &gt; gp.player.worldY - gp.player.screenY
+                &amp;&amp; worldY - gp.tileSize &lt; gp.player.worldY + gp.player.screenY) {
+
+<span class="fc" id="L111">            BufferedImage image = null;</span>
+<span class="pc bpc" id="L112" title="3 of 5 branches missed.">            switch (direction) {</span>
+                case &quot;up&quot;:
+<span class="nc bnc" id="L114" title="All 2 branches missed.">                    if (spriteNum == 1) {</span>
+<span class="nc" id="L115">                        image = up1;</span>
+                    }
+<span class="nc bnc" id="L117" title="All 2 branches missed.">                    if (spriteNum == 2) {</span>
+<span class="nc" id="L118">                        image = up2;</span>
+                    }
+                    break;
+                case &quot;down&quot;:
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">                    if (spriteNum == 1) {</span>
+<span class="fc" id="L123">                        image = down1;</span>
+                    }
+<span class="pc bpc" id="L125" title="1 of 2 branches missed.">                    if (spriteNum == 2) {</span>
+<span class="nc" id="L126">                        image = down2;</span>
+                    }
+                    break;
+                case &quot;left&quot;:
+<span class="pc bpc" id="L130" title="1 of 2 branches missed.">                    if (spriteNum == 1) {</span>
+<span class="fc" id="L131">                        image = left1;</span>
+                    }
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">                    if (spriteNum == 2) {</span>
+<span class="nc" id="L134">                        image = left2;</span>
+                    }
+                    break;
+                case &quot;right&quot;:
+<span class="nc bnc" id="L138" title="All 2 branches missed.">                    if (spriteNum == 1) {</span>
+<span class="nc" id="L139">                        image = right1;</span>
+                    }
+<span class="nc bnc" id="L141" title="All 2 branches missed.">                    if (spriteNum == 2) {</span>
+<span class="nc" id="L142">                        image = right2;</span>
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+<span class="fc" id="L149">            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);</span>
+        }
+<span class="fc" id="L151">    }</span>
+
+    public BufferedImage setUp(String imageName) {
+<span class="fc" id="L154">        UtilityTool uTool = new UtilityTool();</span>
+<span class="fc" id="L155">        BufferedImage scaledImage = null;</span>
+
+        try {
+<span class="fc" id="L158">            scaledImage = ImageIO.read(new File(&quot;./src/Images/&quot; + imageName + &quot;.png&quot;));</span>
+<span class="fc" id="L159">            scaledImage = uTool.scaleImage(scaledImage, gp.tileSize, gp.tileSize);</span>
+<span class="nc" id="L160">        } catch (IOException e) {</span>
+<span class="nc" id="L161">            e.printStackTrace();</span>
+<span class="fc" id="L162">        }</span>
+<span class="fc" id="L163">        return scaledImage;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>

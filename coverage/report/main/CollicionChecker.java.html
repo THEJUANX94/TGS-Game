@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CollicionChecker.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCo Coverage Report</a> &gt; <a href="index.source.html" class="el_package">main</a> &gt; <span class="el_source">CollicionChecker.java</span></div><h1>CollicionChecker.java</h1><pre class="source lang-java linenums">package main;
+
+import entity.Entity;
+
+public class CollicionChecker {
+
+    private GamePanel gp;
+
+<span class="fc" id="L9">    public CollicionChecker(GamePanel gp) {</span>
+<span class="fc" id="L10">        this.gp = gp;</span>
+<span class="fc" id="L11">    }</span>
+
+    public void checkTile(Entity entity) {
+<span class="fc" id="L14">        int entityLeftWorldX = entity.worldX + entity.solidArea.x;</span>
+<span class="fc" id="L15">        int entityRightWoldX = entity.worldX + entity.solidArea.x + entity.solidArea.width;</span>
+<span class="fc" id="L16">        int entityTopWorldY = entity.worldY + entity.solidArea.y;</span>
+<span class="fc" id="L17">        int entityBottomWorldY = entity.worldY + entity.solidArea.y + entity.solidArea.height;</span>
+
+<span class="fc" id="L19">        int entityLeftCol = entityLeftWorldX / gp.tileSize;</span>
+<span class="fc" id="L20">        int entityRightCol = entityRightWoldX / gp.tileSize;</span>
+<span class="fc" id="L21">        int entityTopRow = entityTopWorldY / gp.tileSize;</span>
+<span class="fc" id="L22">        int entityBottomRow = entityBottomWorldY / gp.tileSize;</span>
+
+        int tileNum1, tileNum2;
+
+<span class="pc bpc" id="L26" title="1 of 5 branches missed.">        switch (entity.direction) {</span>
+            case &quot;up&quot;:
+<span class="fc" id="L28">                entityTopRow = (entityTopWorldY - entity.speed) / gp.tileSize;</span>
+<span class="fc" id="L29">                tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];</span>
+<span class="fc" id="L30">                tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];</span>
+<span class="fc bfc" id="L31" title="All 4 branches covered.">                if (gp.tileManager.tile[tileNum1].collision == true</span>
+                        || gp.tileManager.tile[tileNum2].collision == true) {
+<span class="fc" id="L33">                    entity.collisionOn = true;</span>
+                }
+                break;
+
+            case &quot;down&quot;:
+<span class="fc" id="L38">                entityBottomRow = (entityBottomWorldY + entity.speed) / gp.tileSize;</span>
+<span class="fc" id="L39">                tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];</span>
+<span class="fc" id="L40">                tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];</span>
+<span class="fc bfc" id="L41" title="All 4 branches covered.">                if (gp.tileManager.tile[tileNum1].collision == true</span>
+                        || gp.tileManager.tile[tileNum2].collision == true) {
+<span class="fc" id="L43">                    entity.collisionOn = true;</span>
+                }
+                break;
+
+            case &quot;left&quot;:
+<span class="fc" id="L48">                entityLeftCol = (entityLeftWorldX - entity.speed) / gp.tileSize;</span>
+<span class="fc" id="L49">                tileNum1 = gp.tileManager.mapTileNum[entityLeftCol][entityTopRow];</span>
+<span class="fc" id="L50">                tileNum2 = gp.tileManager.mapTileNum[entityLeftCol][entityBottomRow];</span>
+<span class="pc bpc" id="L51" title="1 of 4 branches missed.">                if (gp.tileManager.tile[tileNum1].collision == true</span>
+                        || gp.tileManager.tile[tileNum2].collision == true) {
+<span class="fc" id="L53">                    entity.collisionOn = true;</span>
+                }
+                break;
+            case &quot;right&quot;:
+<span class="fc" id="L57">                entityRightCol = (entityRightWoldX + entity.speed) / gp.tileSize;</span>
+<span class="fc" id="L58">                tileNum1 = gp.tileManager.mapTileNum[entityRightCol][entityTopRow];</span>
+<span class="fc" id="L59">                tileNum2 = gp.tileManager.mapTileNum[entityRightCol][entityBottomRow];</span>
+<span class="fc bfc" id="L60" title="All 4 branches covered.">                if (gp.tileManager.tile[tileNum1].collision == true</span>
+                        || gp.tileManager.tile[tileNum2].collision == true) {
+<span class="fc" id="L62">                    entity.collisionOn = true;</span>
+                }
+                break;
+        }
+<span class="fc" id="L66">    }</span>
+
+    public int checkObject(Entity entity, boolean player) {
+<span class="fc" id="L69">        int index = 999;</span>
+
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        for (int i = 0; i &lt; gp.obj.length; i++) {</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">            if (gp.obj[i] != null) {</span>
+                // get entity's solid area position
+<span class="nc" id="L74">                entity.solidArea.x = entity.worldX + entity.solidArea.x;</span>
+<span class="nc" id="L75">                entity.solidArea.y = entity.worldY + entity.solidArea.y;</span>
+                // get the object's solid area position
+<span class="nc" id="L77">                gp.obj[i].solidArea.x = gp.obj[i].worldX + gp.obj[i].solidArea.x;</span>
+<span class="nc" id="L78">                gp.obj[i].solidArea.y = gp.obj[i].worldY + gp.obj[i].solidArea.y;</span>
+
+<span class="nc bnc" id="L80" title="All 5 branches missed.">                switch (entity.direction) {</span>
+                    case &quot;up&quot;:
+<span class="nc" id="L82">                        entity.solidArea.y -= entity.speed;</span>
+
+<span class="nc bnc" id="L84" title="All 2 branches missed.">                        if (entity.solidArea.intersects(gp.obj[i].solidArea)) {</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">                            if (gp.obj[i].collision == true) {</span>
+<span class="nc" id="L86">                                entity.collisionOn = true;</span>
+                            }
+<span class="nc bnc" id="L88" title="All 2 branches missed.">                            if (player == true) {</span>
+<span class="nc" id="L89">                                index = i;</span>
+                            }
+                        }
+                        break;
+                    case &quot;down&quot;:
+<span class="nc" id="L94">                        entity.solidArea.y += entity.speed;</span>
+
+<span class="nc bnc" id="L96" title="All 2 branches missed.">                        if (entity.solidArea.intersects(gp.obj[i].solidArea)) {</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">                            if (gp.obj[i].collision == true) {</span>
+<span class="nc" id="L98">                                entity.collisionOn = true;</span>
+                            }
+<span class="nc bnc" id="L100" title="All 2 branches missed.">                            if (player == true) {</span>
+<span class="nc" id="L101">                                index = i;</span>
+                            }
+                        }
+                        break;
+                    case &quot;left&quot;:
+<span class="nc" id="L106">                        entity.solidArea.x -= entity.speed;</span>
+
+<span class="nc bnc" id="L108" title="All 2 branches missed.">                        if (entity.solidArea.intersects(gp.obj[i].solidArea)) {</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">                            if (gp.obj[i].collision == true) {</span>
+<span class="nc" id="L110">                                entity.collisionOn = true;</span>
+                            }
+<span class="nc bnc" id="L112" title="All 2 branches missed.">                            if (player == true) {</span>
+<span class="nc" id="L113">                                index = i;</span>
+                            }
+                        }
+                        break;
+                    case &quot;right&quot;:
+<span class="nc" id="L118">                        entity.solidArea.x += entity.speed;</span>
+<span class="nc bnc" id="L119" title="All 2 branches missed.">                        if (entity.solidArea.intersects(gp.obj[i].solidArea)) {</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">                            if (gp.obj[i].collision == true) {</span>
+<span class="nc" id="L121">                                entity.collisionOn = true;</span>
+                            }
+<span class="nc bnc" id="L123" title="All 2 branches missed.">                            if (player == true) {</span>
+<span class="nc" id="L124">                                index = i;</span>
+                            }
+                        }
+
+                        break;
+                }
+
+<span class="nc" id="L131">                entity.solidArea.x = entity.solidAreaDefaultX;</span>
+<span class="nc" id="L132">                entity.solidArea.y = entity.solidAreaDefaultY;</span>
+<span class="nc" id="L133">                gp.obj[i].solidArea.x = gp.obj[i].solidAreaDefaultX;</span>
+<span class="nc" id="L134">                gp.obj[i].solidArea.y = gp.obj[i].solidAreaDefaultY;</span>
+            }
+        }
+
+<span class="fc" id="L138">        return index;</span>
+    }
+
+    public int checkEntity(Entity entity, Entity[] target) {
+<span class="fc" id="L142">        int index = 999;</span>
+
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        for (int i = 0; i &lt; target.length; i++) {</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">            if (target[i] != null) {</span>
+                // get entity's solid area position
+<span class="fc" id="L147">                entity.solidArea.x = entity.worldX + entity.solidArea.x;</span>
+<span class="fc" id="L148">                entity.solidArea.y = entity.worldY + entity.solidArea.y;</span>
+                // get the object's solid area position
+<span class="fc" id="L150">                target[i].solidArea.x = target[i].worldX + target[i].solidArea.x;</span>
+<span class="fc" id="L151">                target[i].solidArea.y = target[i].worldY + target[i].solidArea.y;</span>
+
+<span class="pc bpc" id="L153" title="1 of 5 branches missed.">                switch (entity.direction) {</span>
+                    case &quot;up&quot;:
+<span class="fc" id="L155">                        entity.solidArea.y -= entity.speed;</span>
+
+<span class="fc bfc" id="L157" title="All 2 branches covered.">                        if (entity.solidArea.intersects(target[i].solidArea)) {</span>
+<span class="fc" id="L158">                            entity.collisionOn = true;</span>
+<span class="fc" id="L159">                            index = i;</span>
+                        }
+                        break;
+                    case &quot;down&quot;:
+<span class="fc" id="L163">                        entity.solidArea.y += entity.speed;</span>
+
+<span class="pc bpc" id="L165" title="1 of 2 branches missed.">                        if (entity.solidArea.intersects(target[i].solidArea)) {</span>
+<span class="nc" id="L166">                            entity.collisionOn = true;</span>
+<span class="nc" id="L167">                            index = i;</span>
+                        }
+                        break;
+                    case &quot;left&quot;:
+<span class="fc" id="L171">                        entity.solidArea.x -= entity.speed;</span>
+
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">                        if (entity.solidArea.intersects(target[i].solidArea)) {</span>
+<span class="nc" id="L174">                            entity.collisionOn = true;</span>
+<span class="nc" id="L175">                            index = i;</span>
+                        }
+                        break;
+                    case &quot;right&quot;:
+<span class="fc" id="L179">                        entity.solidArea.x += entity.speed;</span>
+<span class="fc bfc" id="L180" title="All 2 branches covered.">                        if (entity.solidArea.intersects(target[i].solidArea)) {</span>
+<span class="fc" id="L181">                            entity.collisionOn = true;</span>
+<span class="fc" id="L182">                            index = i;</span>
+                        }
+
+                        break;
+                }
+
+<span class="fc" id="L188">                entity.solidArea.x = entity.solidAreaDefaultX;</span>
+<span class="fc" id="L189">                entity.solidArea.y = entity.solidAreaDefaultY;</span>
+<span class="fc" id="L190">                target[i].solidArea.x = target[i].solidAreaDefaultX;</span>
+<span class="fc" id="L191">                target[i].solidArea.y = target[i].solidAreaDefaultY;</span>
+            }
+        }
+
+<span class="fc" id="L195">        return index;</span>
+    }
+
+    public void checkPlayer(Entity entity) {
+        // get entity's solid area position
+<span class="nc" id="L200">        entity.solidArea.x = entity.worldX + entity.solidArea.x;</span>
+<span class="nc" id="L201">        entity.solidArea.y = entity.worldY + entity.solidArea.y;</span>
+        // get the object's solid area position
+<span class="nc" id="L203">        gp.player.solidArea.x = gp.player.worldX + gp.player.solidArea.x;</span>
+<span class="nc" id="L204">        gp.player.solidArea.y = gp.player.worldY + gp.player.solidArea.y;</span>
+
+<span class="nc bnc" id="L206" title="All 5 branches missed.">        switch (entity.direction) {</span>
+            case &quot;up&quot;:
+<span class="nc" id="L208">                entity.solidArea.y -= entity.speed;</span>
+
+<span class="nc bnc" id="L210" title="All 2 branches missed.">                if (entity.solidArea.intersects(gp.player.solidArea)) {</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">                    if (gp.player.collisionOn == true) {</span>
+<span class="nc" id="L212">                        entity.collisionOn = true;</span>
+                    }
+                }
+                break;
+            case &quot;down&quot;:
+<span class="nc" id="L217">                entity.solidArea.y += entity.speed;</span>
+
+<span class="nc bnc" id="L219" title="All 2 branches missed.">                if (entity.solidArea.intersects(gp.player.solidArea)) {</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">                    if (gp.player.collisionOn == true) {</span>
+<span class="nc" id="L221">                        entity.collisionOn = true;</span>
+                    }
+                }
+                break;
+            case &quot;left&quot;:
+<span class="nc" id="L226">                entity.solidArea.x -= entity.speed;</span>
+
+<span class="nc bnc" id="L228" title="All 2 branches missed.">                if (entity.solidArea.intersects(gp.player.solidArea)) {</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">                    if (gp.player.collisionOn == true) {</span>
+<span class="nc" id="L230">                        entity.collisionOn = true;</span>
+                    }
+                }
+                break;
+            case &quot;right&quot;:
+<span class="nc" id="L235">                entity.solidArea.x += entity.speed;</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">                if (entity.solidArea.intersects(gp.player.solidArea)) {</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">                    if (gp.player.collisionOn == true) {</span>
+<span class="nc" id="L238">                        entity.collisionOn = true;</span>
+                    }
+                }
+
+                break;
+        }
+
+<span class="nc" id="L245">        entity.solidArea.x = entity.solidAreaDefaultX;</span>
+<span class="nc" id="L246">        entity.solidArea.y = entity.solidAreaDefaultY;</span>
+<span class="nc" id="L247">        gp.player.solidArea.x = gp.player.solidAreaDefaultX;</span>
+<span class="nc" id="L248">        gp.player.solidArea.y = gp.player.solidAreaDefaultY;</span>
+<span class="nc" id="L249">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.14.202510111229</span></div></body></html>
